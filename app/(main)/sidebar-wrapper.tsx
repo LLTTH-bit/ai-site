@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { PlusCircle, Settings, User, ChevronLeft, ChevronRight } from "lucide-react";
 import ConversationSidebar from "@/components/conversation-sidebar";
 import { LogoutButton } from "./logout-button";
-import { createNewConversation } from "./actions";
 
 interface Conversation {
   id: string;
@@ -23,6 +23,33 @@ interface SidebarWrapperProps {
 
 export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapperProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const router = useRouter();
+
+  const handleCreateConversation = async () => {
+    if (isCreating) return;
+    setIsCreating(true);
+
+    try {
+      const res = await fetch("/api/conversations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: "新对话" }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create conversation");
+      }
+
+      const data = await res.json();
+      router.push(`/chat/${data.id}`);
+    } catch (error) {
+      console.error("创建对话失败:", error);
+      alert("创建对话失败，请重试");
+    } finally {
+      setIsCreating(false);
+    }
+  };
 
   return (
     <>
@@ -39,15 +66,14 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
           }`}
           style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
         >
-          <form action={createNewConversation}>
-            <button
-              type="submit"
-              className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-sidebar-accent transition-colors w-full"
-            >
-              <PlusCircle className="w-5 h-5" />
-              <span className="font-medium">新建对话</span>
-            </button>
-          </form>
+          <button
+            onClick={handleCreateConversation}
+            disabled={isCreating}
+            className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-sidebar-accent transition-colors w-full disabled:opacity-50"
+          >
+            <PlusCircle className="w-5 h-5" />
+            <span className="font-medium">{isCreating ? "创建中..." : "新建对话"}</span>
+          </button>
         </div>
 
         {/* 对话列表 */}

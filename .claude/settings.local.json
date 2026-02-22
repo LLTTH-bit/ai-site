@@ -17,7 +17,15 @@
       "Bash(curl:*)",
       "Bash(ls:*)",
       "Bash(ssh:*)",
-      "Bash(sleep 5:*)"
+      "Bash(sleep 5:*)",
+      "Bash(ssh-add:*)",
+      "Bash(sshpass:*)",
+      "WebFetch(domain:59.110.8.222)",
+      "Bash(export SSH_ASKPASS_REQUIRE=force && export SSH_ASKPASS=\"echo 936042\" && ssh -o StrictHostKeyChecking=no root@59.110.8.222 \"echo connected\" 2>&1)",
+      "Bash(echo '#!/bin/bash\necho 936042Lzb' > /tmp/ssh_pass_server.sh && chmod +x /tmp/ssh_pass_server.sh && DISPLAY=:0 SSH_ASKPASS=/tmp/ssh_pass_server.sh SSH_ASKPASS_REQUIRE=force ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=password root@59.110.8.222 \"echo connected\" 2>&1)",
+      "Bash(DISPLAY=:0 SSH_ASKPASS=/tmp/ssh_pass_server.sh SSH_ASKPASS_REQUIRE=force ssh:*)",
+      "Bash(cd \"E:/claude/ai-site\" && git add app/\\\\\\(main\\\\\\)/error.tsx && git commit -m \"$\\(cat <<'EOF'\nAdd error boundary to capture client-side errors\nEOF\n\\)\" && git push origin main 2>&1)",
+      "Bash(git add -A && git commit -m \"Fix: Replace Server Action with API call to avoid 502 error\" 2>&1)"
     ]
   }
 }
