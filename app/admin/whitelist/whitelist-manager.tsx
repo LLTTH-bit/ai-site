@@ -1,45 +1,52 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, Mail, Calendar, CheckCircle, XCircle } from "lucide-react";
+import { Plus, Trash2, Mail, Calendar, User as UserIcon, Shield } from "lucide-react";
 
-interface WhitelistItem {
+interface User {
   id: string;
   email: string;
-  note: string | null;
-  used: boolean;
+  name: string | null;
+  role: string;
+  status: string;
   createdAt: Date | string;
 }
 
-export default function WhitelistManager({
+export default function UserManager({
   initialData,
-  adminId,
+  adminEmail,
 }: {
-  initialData: WhitelistItem[];
-  adminId: string;
+  initialData: User[];
+  adminEmail: string;
 }) {
   const [list, setList] = useState(initialData);
   const [email, setEmail] = useState("");
-  const [note, setNote] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const addWhitelist = async (e: React.FormEvent) => {
+  const addUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!email.trim() || !password.trim()) return;
 
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/whitelist", {
+      const res = await fetch("/api/admin/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), note: note.trim() || undefined }),
+        body: JSON.stringify({
+          email: email.trim(),
+          password: password.trim(),
+          name: name.trim() || undefined,
+        }),
       });
 
       if (res.ok) {
-        const newItem = await res.json();
-        setList((prev) => [newItem, ...prev]);
+        const newUser = await res.json();
+        setList((prev) => [newUser, ...prev]);
         setEmail("");
-        setNote("");
+        setPassword("");
+        setName("");
       } else {
         const data = await res.json();
         alert(data.error || "添加失败");
@@ -49,10 +56,10 @@ export default function WhitelistManager({
     }
   };
 
-  const deleteWhitelist = async (id: string) => {
-    if (!confirm("确定删除？")) return;
+  const deleteUser = async (id: string) => {
+    if (!confirm("确定删除该用户？")) return;
 
-    const res = await fetch(`/api/admin/whitelist/${id}`, {
+    const res = await fetch(`/api/admin/users/${id}`, {
       method: "DELETE",
     });
 
@@ -61,15 +68,18 @@ export default function WhitelistManager({
     }
   };
 
+  // 过滤掉管理员自己
+  const users = list.filter((user) => user.email !== adminEmail);
+
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">白名单管理</h1>
-        <p className="text-slate-500 text-sm mt-1">管理用户注册白名单</p>
+        <h1 className="text-2xl font-bold text-slate-800">用户管理</h1>
+        <p className="text-slate-500 text-sm mt-1">管理系统用户账号（不包括管理员）</p>
       </div>
 
       <form
-        onSubmit={addWhitelist}
+        onSubmit={addUser}
         className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm mb-6"
       >
         <div className="flex flex-col sm:flex-row gap-3">
@@ -86,10 +96,20 @@ export default function WhitelistManager({
           <div className="flex-1">
             <input
               type="text"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="备注（可选）"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="用户昵称（可选）"
               className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            />
+          </div>
+          <div className="flex-1">
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="登录密码"
+              className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              required
             />
           </div>
           <button
@@ -98,7 +118,7 @@ export default function WhitelistManager({
             className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium text-sm flex items-center justify-center gap-2"
           >
             <Plus className="w-4 h-4" />
-            {loading ? "添加中..." : "添加"}
+            {loading ? "添加中..." : "添加用户"}
           </button>
         </div>
       </form>
@@ -108,10 +128,13 @@ export default function WhitelistManager({
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200">
               <th className="px-5 py-3 text-left text-xs font-semibold text-slate-600 uppercase">
-                邮箱
+                用户
               </th>
               <th className="px-5 py-3 text-left text-xs font-semibold text-slate-600 uppercase">
-                备注
+                昵称
+              </th>
+              <th className="px-5 py-3 text-left text-xs font-semibold text-slate-600 uppercase">
+                角色
               </th>
               <th className="px-5 py-3 text-left text-xs font-semibold text-slate-600 uppercase">
                 状态
@@ -125,49 +148,44 @@ export default function WhitelistManager({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200">
-            {list.map((item) => (
-              <tr key={item.id} className="hover:bg-slate-50">
+            {users.map((user) => (
+              <tr key={user.id} className="hover:bg-slate-50">
                 <td className="px-5 py-3.5">
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-slate-400" />
-                    <span className="text-sm text-slate-700">{item.email}</span>
+                    <span className="text-sm text-slate-700">{user.email}</span>
                   </div>
                 </td>
                 <td className="px-5 py-3.5 text-sm text-slate-600">
-                  {item.note || "-"}
+                  {user.name || "-"}
+                </td>
+                <td className="px-5 py-3.5">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                    <Shield className="w-3 h-3" />
+                    普通用户
+                  </span>
                 </td>
                 <td className="px-5 py-3.5">
                   <span
                     className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
-                      item.used
+                      user.status === "ACTIVE"
                         ? "bg-green-100 text-green-700"
-                        : "bg-slate-100 text-slate-600"
+                        : "bg-red-100 text-red-700"
                     }`}
                   >
-                    {item.used ? (
-                      <>
-                        <CheckCircle className="w-3 h-3" />
-                        已注册
-                      </>
-                    ) : (
-                      <>
-                        <XCircle className="w-3 h-3" />
-                        未注册
-                      </>
-                    )}
+                    {user.status === "ACTIVE" ? "正常" : "禁用"}
                   </span>
                 </td>
                 <td className="px-5 py-3.5">
                   <div className="flex items-center gap-1.5 text-sm text-slate-500">
                     <Calendar className="w-3.5 h-3.5" />
-                    {new Date(item.createdAt).toLocaleDateString("zh-CN")}
+                    {new Date(user.createdAt).toLocaleDateString("zh-CN")}
                   </div>
                 </td>
                 <td className="px-5 py-3.5 text-right">
                   <button
-                    onClick={() => deleteWhitelist(item.id)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                    disabled={item.used}
+                    onClick={() => deleteUser(user.id)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     删除
@@ -178,9 +196,9 @@ export default function WhitelistManager({
           </tbody>
         </table>
 
-        {list.length === 0 && (
+        {users.length === 0 && (
           <div className="py-12 text-center text-slate-500">
-            暂无白名单数据
+            暂无用户数据
           </div>
         )}
       </div>

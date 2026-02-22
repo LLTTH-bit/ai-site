@@ -14,7 +14,8 @@
       "Bash(scp:*)",
       "WebFetch(domain:minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com)",
       "Bash(git remote:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(ls:*)"
     ]
   }
 }

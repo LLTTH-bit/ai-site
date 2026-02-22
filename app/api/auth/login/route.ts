@@ -55,10 +55,12 @@ export async function POST(req: NextRequest) {
     });
 
     // 5. 创建 session
+    // 只有 cuber936bit@163.com 是管理员
+    const isAdminEmail = email.toLowerCase() === "cuber936bit@163.com";
     const session = await getSession();
     session.userId = user.id;
     session.email = user.email;
-    session.role = user.role as "USER" | "ADMIN";
+    session.role = isAdminEmail ? "ADMIN" : (user.role as "USER" | "ADMIN");
     session.isLoggedIn = true;
     await session.save();
 
