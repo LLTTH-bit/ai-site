@@ -310,7 +310,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
 
         {/* 右侧主题切换按钮 */}
         <button
-          className="theme-toggle-btn"
+          className={`theme-toggle-btn p-2 rounded-lg ${isDark ? "hover:bg-[#3f3f3f]" : "hover:bg-gray-100"} transition-colors cursor-pointer ${isDark ? "text-white" : "text-gray-900"}`}
           onClick={() => {
             // 获取按钮位置（右上角）
             const button = document.querySelector('.theme-toggle-btn');
@@ -441,7 +441,6 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
               }, 400);
             }, 700);
           }}
-          className={`p-2 rounded-lg ${isDark ? "hover:bg-[#3f3f3f]" : "hover:bg-gray-100"} transition-colors cursor-pointer ${isDark ? "text-white" : "text-gray-900"}`}
           title={isDark ? "切换到浅色模式" : "切换到深色模式"}
         >
           {isDark ? (
