@@ -166,7 +166,9 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
     const latestMsg = messages[messages.length - 1];
     if (!latestMsg || latestMsg.role !== "assistant") return false;
     const displayed = displayedContent[latestMsg.id] || "";
-    return displayed.length < latestMsg.content.length;
+    // 检查是否正在流式输出（displayed 有内容但消息还未完全接收）
+    // 当 isTyping 为 true 且有正在显示的内容时，表示正在输入
+    return isTyping && displayed.length > 0;
   };
 
   useEffect(() => {
