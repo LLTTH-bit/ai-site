@@ -25,6 +25,11 @@ export default async function AdminConversationsPage() {
       _count: {
         select: { messages: true },
       },
+      messages: {
+        orderBy: { createdAt: "asc" },
+        take: 1,
+        select: { content: true, role: true },
+      },
     },
   });
 

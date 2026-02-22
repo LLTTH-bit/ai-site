@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Trash2, MessageSquare, Calendar, User, AlertTriangle, Eye } from "lucide-react";
+import { getModelById } from "@/lib/models";
 
 interface Conversation {
   id: string;
@@ -17,6 +18,10 @@ interface Conversation {
   _count: {
     messages: number;
   };
+  messages: {
+    content: string;
+    role: string;
+  }[];
 }
 
 export default function ConversationList({
@@ -107,9 +112,23 @@ export default function ConversationList({
                     {conv._count.messages} 条消息
                   </div>
                   <div className="px-2 py-0.5 bg-blue-50 rounded text-xs text-blue-600">
-                    {conv.model.split("/").pop()}
+                    {getModelById(conv.model)?.name || conv.model.split("/").pop()}
                   </div>
                 </div>
+
+                {/* 第一条消息预览 */}
+                {conv.messages[0] && (
+                  <div className="mt-3 p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <div className="text-xs text-slate-400 mb-1">
+                      {conv.messages[0].role === "user" ? "用户第一条消息:" : "AI第一条回复:"}
+                    </div>
+                    <p className="text-sm text-slate-600 line-clamp-2">
+                      {conv.messages[0].content.length > 100
+                        ? conv.messages[0].content.slice(0, 100) + "..."
+                        : conv.messages[0].content}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-2">

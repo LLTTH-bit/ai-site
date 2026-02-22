@@ -43,7 +43,7 @@ model Conversation {
   id        String   @id @default(cuid())
   userId    String
   title     String   @default("新对话")
-  model     String   @default("claude-sonnet-4-20250514")
+  model     String   @default("Qwen/Qwen2.5-7B-Instruct")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
