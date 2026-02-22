@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PlusCircle, Settings, LogOut, User, ChevronLeft, ChevronRight } from "lucide-react";
 import ConversationSidebar from "@/components/conversation-sidebar";
 import { LogoutButton } from "./logout-button";
+import { createNewConversation } from "./actions";
 
 interface Conversation {
   id: string;
@@ -32,20 +33,7 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
         }`}
       >
         <div className={`p-3 border-b border-sidebar-border ${collapsed ? "hidden" : ""}`}>
-          <form action={async () => {
-            "use server";
-            const { getSession } = await import("@/lib/session");
-            const { prisma } = await import("@/lib/prisma");
-            const { redirect } = await import("next/navigation");
-            const session = await getSession();
-            const conversation = await prisma.conversation.create({
-              data: {
-                userId: session.userId,
-                title: "新对话",
-              },
-            });
-            redirect(`/chat/${conversation.id}`);
-          }}>
+          <form action={createNewConversation}>
             <button
               type="submit"
               className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-sidebar-accent transition-colors w-full"
