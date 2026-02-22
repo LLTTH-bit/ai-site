@@ -12,7 +12,7 @@ export const sessionOptions: SessionOptions = {
   password: process.env.SESSION_SECRET!,
   cookieName: "ai-chat-session",
   cookieOptions: {
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
     maxAge: 60 * 60 * 24 * 7, // 7 days
     httpOnly: true,
     sameSite: "lax",
