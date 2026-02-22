@@ -12,6 +12,10 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+
+    if (loading) return;
+    console.log("开始登录:", email);
     setError("");
     setLoading(true);
 
@@ -30,6 +34,7 @@ export default function LoginPage() {
         return;
       }
 
+      console.log("登录成功，准备跳转");
       // 登录成功，跳转到首页
       setLoading(false);
       window.location.replace("/");
