@@ -14,8 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI 对话",
+  title: "LLTTH-AI-site",
   description: "私有 AI 对话平台",
+  icons: {
+    icon: "/star.ico",
+  },
 };
 
 export default function RootLayout({
