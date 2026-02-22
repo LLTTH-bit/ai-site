@@ -112,7 +112,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="邮箱"
-              className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-[#10a37f] ${
+              className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-blue-500 ${
                 isDark
                   ? "bg-[#2f2f2f] text-white border-gray-700"
                   : "bg-white text-gray-800 border-gray-300"
@@ -128,7 +128,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="密码"
-              className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-[#10a37f] ${
+              className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-blue-500 ${
                 isDark
                   ? "bg-[#2f2f2f] text-white border-gray-700"
                   : "bg-white text-gray-800 border-gray-300"
