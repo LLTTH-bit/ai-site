@@ -42,9 +42,19 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[#171717]">
       <div className="w-full max-w-md p-8">
         <div className="text-center mb-8">
-          <div className="text-4xl mb-4">🤖</div>
+          <img src="/star.ico" alt="logo" className="w-20 h-20 mx-auto mb-4" />
+          <div
+            className="text-5xl font-bold text-white mb-2"
+            style={{
+              fontFamily: "'Courier New', monospace",
+              letterSpacing: '12px',
+              textShadow: '0 0 20px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.3)',
+            }}
+          >
+            LLTTH
+          </div>
           <h1
-            className="text-2xl font-semibold text-white"
+            className="text-xl font-semibold text-gray-400"
             style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 600 }}
           >
             登录
