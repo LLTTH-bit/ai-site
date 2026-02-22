@@ -37,7 +37,9 @@ export default function LoginPage() {
       console.log("登录成功，准备跳转");
       // 登录成功，跳转到首页
       setLoading(false);
-      window.location.replace("/");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 100);
     } catch (err) {
       setError("网络错误，请稍后重试");
     } finally {
