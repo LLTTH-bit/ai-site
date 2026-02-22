@@ -5,6 +5,7 @@ import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { PlusCircle, Settings, LogOut, User } from "lucide-react";
 import ConversationSidebar from "@/components/conversation-sidebar";
+import { LogoutButton } from "./logout-button";
 
 export default async function MainLayout({ children }: { children: ReactNode }) {
   const session = await getSession();
@@ -33,13 +34,6 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
       },
     },
   });
-
-  const handleLogout = async () => {
-    "use server";
-    const session = await getSession();
-    session.destroy();
-    redirect("/login");
-  };
 
   const createNewConversation = async () => {
     "use server";
@@ -105,15 +99,7 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
               </p>
             </div>
           </div>
-          <form action={handleLogout}>
-            <button
-              type="submit"
-              className="w-full mt-2 flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              登出
-            </button>
-          </form>
+          <LogoutButton />
         </div>
       </aside>
 
