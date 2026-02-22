@@ -90,6 +90,7 @@ interface Message {
   id: string;
   role: string;
   content: string;
+  paused?: boolean;
 }
 
 interface Conversation {
@@ -116,6 +117,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const isPausedRef = useRef(false);
+  const currentUserMessageIdRef = useRef<string>("");
 
   // 对话标题相关状态
   const [title, setTitle] = useState(conversation.title);
@@ -187,8 +189,11 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
 
     isPausedRef.current = false;
 
+    const userMessageId = Date.now().toString();
+    currentUserMessageIdRef.current = userMessageId;
+
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: userMessageId,
       role: "user",
       content: input,
     };
@@ -234,6 +239,10 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
             return newContent;
           });
           setMessages(prev => prev.filter(msg => msg.id !== assistantId));
+          // 标记用户消息为已暂停
+          setMessages(prev => prev.map(msg =>
+            msg.id === currentUserMessageIdRef.current ? { ...msg, paused: true } : msg
+          ));
           setIsTyping(false);
           setLoading(false);
           return;
@@ -491,7 +500,9 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
                     <div
                       className={`inline-block max-w-[80%] px-4 py-3 rounded-2xl ${
                         msg.role === "user"
-                          ? "bg-blue-500 text-white"
+                          ? msg.paused
+                            ? "bg-gray-400 text-gray-200 line-through opacity-60"
+                            : "bg-blue-500 text-white"
                           : isDark
                             ? "bg-[#2f2f2f] text-gray-100"
                             : "bg-gray-100 text-gray-900"
