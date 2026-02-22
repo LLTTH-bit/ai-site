@@ -390,13 +390,55 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
               document.head.appendChild(style);
             }
 
-            overlay.appendChild(icon);
-            overlay.appendChild(text);
-            document.body.appendChild(overlay);
+            overlay1.appendChild(icon);
+            overlay1.appendChild(text);
+            document.body.appendChild(overlay1);
 
-            // 动画完成后移除覆盖层
+            // 立即扩散遮罩
+            requestAnimationFrame(() => {
+              overlay1.style.clipPath = `circle(150% at ${buttonX}px ${buttonY}px)`;
+            });
+
+            // 400ms后（扩散完成）切换主题
             setTimeout(() => {
-              overlay.remove();
+              setTheme(newTheme);
+            }, 400);
+
+            // 700ms后创建第二阶段遮罩（收缩）
+            setTimeout(() => {
+              const overlay2 = document.createElement("div");
+              overlay2.id = "theme-transition-overlay-chat-2";
+              overlay2.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: ${bgColor};
+                pointer-events: none;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                clip-path: circle(150% at ${buttonX}px ${buttonY}px);
+                transition: clip-path 0.4s ease-in;
+              `;
+
+              const icon2 = icon.cloneNode(true) as HTMLElement;
+              const text2 = text.cloneNode(true) as HTMLElement;
+              overlay2.appendChild(icon2);
+              overlay2.appendChild(text2);
+              document.body.appendChild(overlay2);
+
+              requestAnimationFrame(() => {
+                overlay2.style.clipPath = `circle(0% at ${buttonX}px ${buttonY}px)`;
+              });
+
+              setTimeout(() => {
+                overlay1.remove();
+                overlay2.remove();
+              }, 400);
             }, 700);
           }}
           className={`p-2 rounded-lg ${isDark ? "hover:bg-[#3f3f3f]" : "hover:bg-gray-100"} transition-colors cursor-pointer ${isDark ? "text-white" : "text-gray-900"}`}
