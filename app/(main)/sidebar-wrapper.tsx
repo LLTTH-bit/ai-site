@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { PlusCircle, Settings, LogOut, User, ChevronLeft, ChevronRight } from "lucide-react";
+import { PlusCircle, Settings, User, ChevronLeft, ChevronRight } from "lucide-react";
 import ConversationSidebar from "@/components/conversation-sidebar";
 import { LogoutButton } from "./logout-button";
 import { createNewConversation } from "./actions";
@@ -28,11 +28,17 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
     <>
       {/* 侧边栏 */}
       <aside
-        className={`bg-sidebar flex flex-col text-sidebar-foreground transition-all duration-300 ease-in-out overflow-hidden ${
+        className={`relative bg-sidebar flex flex-col text-sidebar-foreground overflow-hidden ${
           collapsed ? "w-0" : "w-72"
         }`}
+        style={{ transition: "width 0.3s ease-in-out" }}
       >
-        <div className={`p-3 border-b border-sidebar-border ${collapsed ? "hidden" : ""}`}>
+        <div
+          className={`p-3 border-b border-sidebar-border ${
+            collapsed ? "opacity-0 invisible" : "opacity-100 visible"
+          }`}
+          style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
+        >
           <form action={createNewConversation}>
             <button
               type="submit"
@@ -45,7 +51,12 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
         </div>
 
         {/* 对话列表 */}
-        <div className={`flex-1 overflow-y-auto ${collapsed ? "hidden" : ""}`}>
+        <div
+          className={`flex-1 overflow-y-auto ${
+            collapsed ? "opacity-0 invisible" : "opacity-100 visible"
+          }`}
+          style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
+        >
           <div className="p-3">
             <h3 className="text-xs font-bold text-sidebar-foreground/80 uppercase tracking-wider mb-2 px-3">
               对话历史
@@ -55,8 +66,13 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
         </div>
 
         {/* 管理员后台（仅管理员可见） */}
-        {isAdmin && !collapsed && (
-          <div className="p-2 border-t border-sidebar-border">
+        {isAdmin && (
+          <div
+            className={`p-2 border-t border-sidebar-border ${
+              collapsed ? "opacity-0 invisible" : "opacity-100 visible"
+            }`}
+            style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
+          >
             <Link
               href="/admin"
               className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sm transition-colors"
@@ -68,7 +84,12 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
         )}
 
         {/* 用户信息 */}
-        <div className={`p-3 border-t border-sidebar-border ${collapsed ? "hidden" : ""}`}>
+        <div
+          className={`p-3 border-t border-sidebar-border ${
+            collapsed ? "opacity-0 invisible" : "opacity-100 visible"
+          }`}
+          style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
+        >
           <div className="flex items-center gap-2 px-2 py-2">
             <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
               <User className="w-4 h-4 text-primary-foreground" />
@@ -84,11 +105,13 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
         </div>
       </aside>
 
-      {/* 收起/展开按钮 */}
+      {/* 收起/展开按钮 - 始终可见 */}
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 z-20 bg-sidebar border border-sidebar-border rounded-r-lg p-1 hover:bg-sidebar-accent transition-colors"
-        style={{ left: collapsed ? "0" : "288px" }}
+        className="absolute top-1/2 transform -translate-y-1/2 z-20 bg-sidebar border border-sidebar-border rounded-full p-1.5 hover:bg-sidebar-accent transition-all duration-300"
+        style={{
+          left: collapsed ? "8px" : "264px",
+        }}
       >
         {collapsed ? (
           <ChevronRight className="w-4 h-4 text-sidebar-foreground" />
@@ -96,6 +119,14 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
           <ChevronLeft className="w-4 h-4 text-sidebar-foreground" />
         )}
       </button>
+
+      {/* 分隔线 - 收起时隐藏 */}
+      {!collapsed && (
+        <div
+          className="w-px bg-sidebar-border"
+          style={{ marginLeft: collapsed ? "0" : "0" }}
+        />
+      )}
     </>
   );
 }
