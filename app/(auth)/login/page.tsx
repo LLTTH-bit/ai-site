@@ -57,6 +57,10 @@ export default function LoginPage() {
   };
 
   const toggleTheme = () => {
+    // 先移除已存在的遮罩
+    document.getElementById("theme-transition-overlay-login-1")?.remove();
+    document.getElementById("theme-transition-overlay-login-2")?.remove();
+
     // 获取按钮位置（右上角）
     const button = document.querySelector('.theme-toggle-btn');
     const buttonRect = button?.getBoundingClientRect();
@@ -67,9 +71,11 @@ export default function LoginPage() {
     const currentTheme = isDark ? "dark" : "light";
     const newTheme = currentTheme === "dark" ? "light" : "dark";
 
-    // 用新主题的颜色来创建第一阶段遮罩（从按钮位置扩散）
-    const bgColor = newTheme === "light" ? "#171717" : "#ffffff";
-    const textColor = newTheme === "light" ? "#ffffff" : "#171717";
+    // 用旧主题的颜色来创建遮罩（从按钮位置扩散）
+    // 浅色→深色：遮罩用深色(#171717)
+    // 深色→浅色：遮罩用浅色(#ffffff)
+    const bgColor = currentTheme === "light" ? "#171717" : "#ffffff";
+    const textColor = currentTheme === "light" ? "#ffffff" : "#171717";
 
     // 创建第一阶段遮罩（扩散）
     const overlay1 = document.createElement("div");
