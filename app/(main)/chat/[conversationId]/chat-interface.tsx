@@ -596,7 +596,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
             {isCurrentlyTyping() ? (
               <button
                 onClick={() => { isPausedRef.current = true; }}
-                className="absolute right-3 bottom-3 p-2 rounded-xl bg-red-500 text-white hover:opacity-90 transition-all"
+                className="absolute right-3 bottom-3 p-2 rounded-xl bg-red-500 text-white hover:opacity-90 transition-all cursor-pointer"
                 title="停止回复"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
