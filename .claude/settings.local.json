@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(head:*)",
+      "Bash(true:*)",
+      "Bash(taskkill:*)",
+      "Bash(cd /e/claude/ai-site && npm run db:seed 2>&1)",
+      "Bash(cd /e/claude/ai-site && npm install next-themes 2>&1)",
+      "WebSearch",
+      "WebFetch(domain:siliconflow.cn)",
+      "Bash(gh auth:*)",
+      "Bash(where gh:*)",
+      "Bash(cd:*)"
+    ]
+  }
+}
