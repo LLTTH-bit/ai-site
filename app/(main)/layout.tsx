@@ -11,6 +11,15 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
     redirect("/login");
   }
 
+  // 检查用户是否存在
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+  });
+
+  if (!user) {
+    redirect("/login");
+  }
+
   const isAdmin = session.role === "ADMIN";
 
   // 获取对话列表（用于侧边栏显示）- 只显示有消息的对话

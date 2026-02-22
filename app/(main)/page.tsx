@@ -9,6 +9,15 @@ export default async function HomePage() {
     redirect("/login");
   }
 
+  // 检查用户是否存在
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+  });
+
+  if (!user) {
+    redirect("/login");
+  }
+
   // 自动创建新对话并跳转
   const conversation = await prisma.conversation.create({
     data: {

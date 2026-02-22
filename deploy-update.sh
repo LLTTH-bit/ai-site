@@ -5,10 +5,9 @@ echo "========== 开始更新网站 =========="
 # 保持数据库不变，只更新代码
 cd /var/www/ai-site
 
-# 拉取最新代码
+# 拉取最新代码（不更新数据库文件）
 echo "正在拉取代码..."
 git fetch origin main
-git checkout -- prisma/dev.db
 git pull origin main
 
 # 重新构建
