@@ -240,9 +240,18 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
           });
           setMessages(prev => prev.filter(msg => msg.id !== assistantId));
           // 标记用户消息为已暂停
+          const userMsgId = currentUserMessageIdRef.current;
           setMessages(prev => prev.map(msg =>
-            msg.id === currentUserMessageIdRef.current ? { ...msg, paused: true } : msg
+            msg.id === userMsgId ? { ...msg, paused: true } : msg
           ));
+          // 同步保存到数据库
+          try {
+            await fetch(`/api/messages/${userMsgId}`, {
+              method: "PATCH",
+            });
+          } catch (e) {
+            console.error("Failed to save paused status:", e);
+          }
           setIsTyping(false);
           setLoading(false);
           return;
