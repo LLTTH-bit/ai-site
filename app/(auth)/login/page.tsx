@@ -94,7 +94,7 @@ export default function LoginPage() {
       align-items: center;
       justify-content: center;
       clip-path: circle(0% at ${buttonX}px ${buttonY}px);
-      transition: clip-path 0.4s ease-out;
+      transition: clip-path 0.25s ease-out;
     `;
 
     // 创建图标
@@ -133,12 +133,12 @@ export default function LoginPage() {
       text.style.opacity = "1";
     });
 
-    // 400ms后（扩散完成）切换主题
+    // 250ms后（扩散完成）切换主题
     setTimeout(() => {
       setTheme(newTheme);
-    }, 400);
+    }, 250);
 
-    // 700ms后创建第二阶段遮罩（收缩）
+    // 450ms后创建第二阶段遮罩（收缩）
     setTimeout(() => {
       // 用新主题的颜色创建收缩遮罩
       const overlay2 = document.createElement("div");
@@ -157,7 +157,7 @@ export default function LoginPage() {
         align-items: center;
         justify-content: center;
         clip-path: circle(150% at ${buttonX}px ${buttonY}px);
-        transition: clip-path 0.4s ease-in;
+        transition: clip-path 0.25s ease-in;
       `;
 
       const icon2 = icon.cloneNode(true) as HTMLElement;
@@ -175,8 +175,8 @@ export default function LoginPage() {
       setTimeout(() => {
         overlay1.remove();
         overlay2.remove();
-      }, 400);
-    }, 700);
+      }, 250);
+    }, 450);
   };
 
   return (

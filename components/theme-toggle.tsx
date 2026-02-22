@@ -60,7 +60,7 @@ export function ThemeToggle() {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      animation: themeExpand 0.7s ease-out forwards;
+      animation: themeExpand 0.5s ease-out forwards;
     `;
 
     // 创建图标
@@ -115,7 +115,7 @@ export function ThemeToggle() {
     setTimeout(() => {
       overlay.remove();
       isAnimating.current = false;
-    }, 700);
+    }, 500);
   };
 
   return (

@@ -349,7 +349,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
               align-items: center;
               justify-content: center;
               clip-path: circle(0% at ${buttonX}px ${buttonY}px);
-              transition: clip-path 0.4s ease-out;
+              transition: clip-path 0.25s ease-out;
             `;
 
             // 创建图标
@@ -405,12 +405,12 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
               overlay1.style.clipPath = `circle(150% at ${buttonX}px ${buttonY}px)`;
             });
 
-            // 400ms后（扩散完成）切换主题
+            // 250ms后（扩散完成）切换主题
             setTimeout(() => {
               setTheme(newTheme);
-            }, 400);
+            }, 250);
 
-            // 700ms后创建第二阶段遮罩（收缩）
+            // 450ms后创建第二阶段遮罩（收缩）
             setTimeout(() => {
               const overlay2 = document.createElement("div");
               overlay2.id = "theme-transition-overlay-chat-2";
@@ -428,7 +428,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
                 align-items: center;
                 justify-content: center;
                 clip-path: circle(150% at ${buttonX}px ${buttonY}px);
-                transition: clip-path 0.4s ease-in;
+                transition: clip-path 0.25s ease-in;
               `;
 
               const icon2 = icon.cloneNode(true) as HTMLElement;
@@ -444,8 +444,8 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
               setTimeout(() => {
                 overlay1.remove();
                 overlay2.remove();
-              }, 400);
-            }, 700);
+              }, 250);
+            }, 450);
           }}
           title={isDark ? "切换到浅色模式" : "切换到深色模式"}
         >
