@@ -133,50 +133,11 @@ export default function LoginPage() {
       text.style.opacity = "1";
     });
 
-    // 250ms后（扩散完成）切换主题
+    // 250ms后（扩散完成）切换主题并移除遮罩
     setTimeout(() => {
       setTheme(newTheme);
+      overlay1.remove();
     }, 250);
-
-    // 450ms后创建第二阶段遮罩（收缩）
-    setTimeout(() => {
-      // 用新主题的颜色创建收缩遮罩
-      const overlay2 = document.createElement("div");
-      overlay2.id = "theme-transition-overlay-login-2";
-      overlay2.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: ${bgColor};
-        pointer-events: none;
-        z-index: 9999;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        clip-path: circle(150% at ${buttonX}px ${buttonY}px);
-        transition: clip-path 0.25s ease-in;
-      `;
-
-      const icon2 = icon.cloneNode(true) as HTMLElement;
-      const text2 = text.cloneNode(true) as HTMLElement;
-      overlay2.appendChild(icon2);
-      overlay2.appendChild(text2);
-      document.body.appendChild(overlay2);
-
-      // 立即收缩遮罩
-      requestAnimationFrame(() => {
-        overlay2.style.clipPath = `circle(0% at ${buttonX}px ${buttonY}px)`;
-      });
-
-      // 收缩完成后移除所有遮罩
-      setTimeout(() => {
-        overlay1.remove();
-        overlay2.remove();
-      }, 250);
-    }, 450);
   };
 
   return (

@@ -405,47 +405,11 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
               overlay1.style.clipPath = `circle(150% at ${buttonX}px ${buttonY}px)`;
             });
 
-            // 250ms后（扩散完成）切换主题
+            // 250ms后（扩散完成）切换主题并移除遮罩
             setTimeout(() => {
               setTheme(newTheme);
+              overlay1.remove();
             }, 250);
-
-            // 450ms后创建第二阶段遮罩（收缩）
-            setTimeout(() => {
-              const overlay2 = document.createElement("div");
-              overlay2.id = "theme-transition-overlay-chat-2";
-              overlay2.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: ${bgColor};
-                pointer-events: none;
-                z-index: 9999;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                clip-path: circle(150% at ${buttonX}px ${buttonY}px);
-                transition: clip-path 0.25s ease-in;
-              `;
-
-              const icon2 = icon.cloneNode(true) as HTMLElement;
-              const text2 = text.cloneNode(true) as HTMLElement;
-              overlay2.appendChild(icon2);
-              overlay2.appendChild(text2);
-              document.body.appendChild(overlay2);
-
-              requestAnimationFrame(() => {
-                overlay2.style.clipPath = `circle(0% at ${buttonX}px ${buttonY}px)`;
-              });
-
-              setTimeout(() => {
-                overlay1.remove();
-                overlay2.remove();
-              }, 250);
-            }, 450);
           }}
           title={isDark ? "切换到浅色模式" : "切换到深色模式"}
         >
