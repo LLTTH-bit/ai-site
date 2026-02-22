@@ -246,7 +246,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
             // 更新本地消息状态
             setMessages(prev => prev.map(msg =>
               msg.id === currentUserMessageIdRef.current
-                ? { ...msg, paused: true, id: dbUserMessageId }
+                ? { ...msg, paused: true, id: dbUserMessageId as string }
                 : msg
             ));
           } else {
