@@ -114,6 +114,8 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
   const [isTyping, setIsTyping] = useState(false);
   const [displayedContent, setDisplayedContent] = useState<Record<string, string>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   // 对话标题相关状态
   const [title, setTitle] = useState(conversation.title);
@@ -171,8 +173,17 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, displayedContent]);
 
+  // AI 回复结束后自动聚焦输入框
+  useEffect(() => {
+    if (!isTyping && !loading && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isTyping, loading]);
+
   const sendMessage = async () => {
     if (!input.trim() || loading || isCurrentlyTyping()) return;
+
+    setIsPaused(false);
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -213,6 +224,19 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
       let assistantContent = "";
 
       while (true) {
+        if (isPaused) {
+          reader.cancel();
+          setDisplayedContent(prev => {
+            const newContent = { ...prev };
+            delete newContent[assistantId];
+            return newContent;
+          });
+          setMessages(prev => prev.filter(msg => msg.id !== assistantId));
+          setIsTyping(false);
+          setLoading(false);
+          return;
+        }
+
         const { done, value } = await reader.read();
         if (done) break;
 
@@ -249,6 +273,10 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
 
       setIsTyping(false);
     } catch (error) {
+      if ((error as Error).name === "AbortError") {
+        // 用户暂停，忽略此错误
+        return;
+      }
       console.error("Chat error:", error);
       alert("发送失败，请稍后重试");
       setIsTyping(false);
@@ -538,6 +566,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
         <div className="max-w-3xl mx-auto">
           <div className="relative">
             <textarea
+              ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -551,15 +580,27 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
               disabled={loading || isCurrentlyTyping()}
               style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 400 }}
             />
-            <button
-              onClick={sendMessage}
-              disabled={loading || isCurrentlyTyping() || !input.trim()}
-              className={`absolute right-3 bottom-3 p-2 rounded-xl bg-blue-500 text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-              </svg>
-            </button>
+            {isCurrentlyTyping() ? (
+              <button
+                onClick={() => setIsPaused(true)}
+                className="absolute right-3 bottom-3 p-2 rounded-xl bg-red-500 text-white hover:opacity-90 transition-all"
+                title="停止回复"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6 6h12v12H6z"/>
+                </svg>
+              </button>
+            ) : (
+              <button
+                onClick={sendMessage}
+                disabled={loading || isCurrentlyTyping() || !input.trim()}
+                className={`absolute right-3 bottom-3 p-2 rounded-xl bg-blue-500 text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+              </button>
+            )}
           </div>
           <div className={`text-center text-xs mt-2 ${isDark ? "text-gray-500" : "text-gray-400"}`}>
             AI 可能会产生错误信息，请核实重要内容
