@@ -40,6 +40,6 @@ export default async function HomePage() {
   } catch (error: any) {
     console.error("[HomePage] Error creating conversation:", error.message);
     console.error("[HomePage] UserId being used:", session.userId);
-    return new Response("Error: " + error.message + " UserId: " + session.userId, { status: 500 });
+    throw error;
   }
 }
