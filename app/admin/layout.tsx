@@ -18,6 +18,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   const navItems = [
     { href: "/admin", label: "仪表盘", icon: LayoutDashboard },
     { href: "/admin/whitelist", label: "用户管理", icon: Users },
+    { href: "/admin/conversations", label: "对话管理", icon: MessageCircle },
     { href: "/admin/usage", label: "用量统计", icon: BarChart3 },
   ];
 

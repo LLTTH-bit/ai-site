@@ -33,3 +33,30 @@ export async function PATCH(req: NextRequest, { params }: Props) {
     return NextResponse.json({ error: "服务器内部错误" }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest, { params }: Props) {
+  try {
+    const session = await getSession();
+    const { id } = await params;
+
+    if (!session.isLoggedIn || session.role !== "ADMIN") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    // 删除用户及其所有对话和消息
+    await prisma.message.deleteMany({
+      where: { conversation: { userId: id } },
+    });
+    await prisma.conversation.deleteMany({
+      where: { userId: id },
+    });
+    await prisma.user.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("删除用户错误:", error);
+    return NextResponse.json({ error: "服务器内部错误" }, { status: 500 });
+  }
+}
