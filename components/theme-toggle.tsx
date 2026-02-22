@@ -27,14 +27,22 @@ export function ThemeToggle() {
     if (isAnimating.current) return;
     isAnimating.current = true;
 
+    // 先移除已存在的遮罩（防止重复）
+    const existingOverlay = document.getElementById("theme-transition-overlay-manual");
+    if (existingOverlay) {
+      existingOverlay.remove();
+    }
+
+    // 使用当前实际主题来决定新主题
+    const currentTheme = isDark ? "dark" : "light";
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+
     // 立即切换主题
-    const newTheme = isDark ? "light" : "dark";
     setTheme(newTheme);
 
     // 用旧主题的颜色来创建覆盖层
-    const oldTheme = theme;
-    const bgColor = oldTheme === "light" ? "#171717" : "#ffffff";
-    const textColor = oldTheme === "light" ? "#ffffff" : "#171717";
+    const bgColor = currentTheme === "light" ? "#171717" : "#ffffff";
+    const textColor = currentTheme === "light" ? "#ffffff" : "#171717";
 
     // 创建动画覆盖层
     const overlay = document.createElement("div");
