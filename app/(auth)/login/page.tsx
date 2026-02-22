@@ -79,13 +79,14 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <img src="/star.ico" alt="logo" className="w-20 h-20 mx-auto mb-4" />
           <div
-            className={`text-5xl font-bold mb-2 ${isDark ? "text-white" : "text-gray-800"}`}
+            className={`text-6xl font-bold mb-2 ${isDark ? "text-white" : "text-gray-800"}`}
             style={{
               fontFamily: "'Courier New', monospace",
-              letterSpacing: '12px',
+              letterSpacing: '14px',
+              fontWeight: 900,
               textShadow: isDark
-                ? '0 0 20px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.3)'
-                : '0 0 20px rgba(0,0,0,0.2), 0 0 40px rgba(0,0,0,0.1)',
+                ? '0 0 30px rgba(16,163,127,0.8), 0 0 60px rgba(16,163,127,0.5), 0 0 90px rgba(16,163,127,0.3)'
+                : '0 0 20px rgba(16,163,127,0.5), 0 0 40px rgba(16,163,127,0.3)',
             }}
           >
             LLTTH
@@ -140,7 +141,11 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-[#10a37f] text-white rounded-xl hover:opacity-90 disabled:opacity-50 transition-opacity cursor-pointer"
+            className={`w-full py-3 rounded-xl hover:opacity-90 disabled:opacity-50 transition-opacity cursor-pointer ${
+              isDark
+                ? "bg-[#2f2f2f] text-white border border-gray-700 hover:border-[#10a37f]"
+                : "bg-white text-gray-800 border border-gray-300 hover:border-[#10a37f]"
+            }`}
             style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 500 }}
           >
             {loading ? "登录中..." : "登录"}
