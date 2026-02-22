@@ -23,6 +23,12 @@ export default async function HomePage() {
   // 自动创建新对话并跳转
   console.log("[HomePage] Creating conversation for userId:", session.userId);
   try {
+    // 先确认用户存在
+    const userCheck = await prisma.user.findUnique({
+      where: { id: session.userId },
+    });
+    console.log("[HomePage] User check result:", userCheck ? "exists" : "not found");
+
     const conversation = await prisma.conversation.create({
       data: {
         userId: session.userId,
@@ -31,8 +37,9 @@ export default async function HomePage() {
     });
     console.log("[HomePage] Conversation created:", conversation.id);
     redirect(`/chat/${conversation.id}`);
-  } catch (error) {
-    console.error("[HomePage] Error creating conversation:", error);
-    throw error;
+  } catch (error: any) {
+    console.error("[HomePage] Error creating conversation:", error.message);
+    console.error("[HomePage] UserId being used:", session.userId);
+    return new Response("Error: " + error.message + " UserId: " + session.userId, { status: 500 });
   }
 }
