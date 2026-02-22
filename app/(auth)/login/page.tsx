@@ -57,7 +57,86 @@ export default function LoginPage() {
   };
 
   const toggleTheme = () => {
-    setTheme(isDark ? "light" : "dark");
+    const newTheme = isDark ? "light" : "dark";
+    const oldTheme = theme;
+
+    // 浅色 → 深色：黑色展开
+    // 深色 → 浅色：白色展开
+    const bgColor = oldTheme === "light" ? "#171717" : "#ffffff";
+    const textColor = oldTheme === "light" ? "#ffffff" : "#171717";
+
+    // 创建动画覆盖层
+    const overlay = document.createElement("div");
+    overlay.id = "theme-transition-overlay-login";
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: ${bgColor};
+      pointer-events: none;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: themeExpand 0.7s ease-out forwards;
+    `;
+
+    // 创建图标
+    const icon = document.createElement("img");
+    icon.src = "/star.ico";
+    icon.style.cssText = `
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+      animation: fadeIn 0.3s ease-out;
+    `;
+
+    // 创建 LLTTH 文字
+    const text = document.createElement("div");
+    text.textContent = "LLTTH";
+    text.style.cssText = `
+      font-family: 'Courier New', monospace;
+      font-size: 48px;
+      font-weight: bold;
+      letter-spacing: 12px;
+      color: ${textColor};
+      text-shadow: 0 0 20px ${textColor}80;
+      animation: fadeIn 0.3s ease-out;
+    `;
+
+    // 添加动画关键帧
+    if (!document.getElementById("theme-anim-style-login")) {
+      const style = document.createElement("style");
+      style.id = "theme-anim-style-login";
+      style.textContent = `
+        @keyframes themeExpand {
+          0% {
+            clip-path: circle(0% at 100% 0%);
+          }
+          100% {
+            clip-path: circle(150% at 100% 0%);
+          }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: scale(0.8); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    overlay.appendChild(icon);
+    overlay.appendChild(text);
+    document.body.appendChild(overlay);
+
+    // 动画完成后切换主题并移除覆盖层
+    setTimeout(() => {
+      setTheme(newTheme);
+      overlay.remove();
+    }, 700);
   };
 
   return (
