@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 保存用户消息
-    await prisma.message.create({
+    const userMessageRecord = await prisma.message.create({
       data: {
         conversationId,
         role: "user",
@@ -105,8 +105,19 @@ export async function POST(req: NextRequest) {
     let assistantContent = "";
     let saved = false;
 
+    let userMessageIdSent = false;
+
     const transformStream = new TransformStream({
       transform(chunk, controller) {
+        // 首次发送数据时，先发送用户消息 ID
+        if (!userMessageIdSent) {
+          userMessageIdSent = true;
+          const userMessageData = {
+            type: "user_message_id",
+            userMessageId: userMessageRecord.id,
+          };
+          controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(userMessageData)}\n\n`));
+        }
         const text = decoder.decode(chunk, { stream: true });
         const lines = text.split("\n");
 

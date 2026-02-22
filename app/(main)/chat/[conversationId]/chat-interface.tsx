@@ -229,6 +229,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let assistantContent = "";
+      let dbUserMessageId: string | null = null;
 
       while (true) {
         if (isPausedRef.current) {
@@ -239,11 +240,20 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
             return newContent;
           });
           setMessages(prev => prev.filter(msg => msg.id !== assistantId));
-          // 标记用户消息为已暂停
-          const userMsgId = currentUserMessageIdRef.current;
-          setMessages(prev => prev.map(msg =>
-            msg.id === userMsgId ? { ...msg, paused: true } : msg
-          ));
+          // 使用数据库返回的消息 ID 标记暂停
+          const userMsgId = dbUserMessageId || currentUserMessageIdRef.current;
+          if (dbUserMessageId) {
+            // 更新本地消息状态
+            setMessages(prev => prev.map(msg =>
+              msg.id === currentUserMessageIdRef.current
+                ? { ...msg, paused: true, id: dbUserMessageId }
+                : msg
+            ));
+          } else {
+            setMessages(prev => prev.map(msg =>
+              msg.id === userMsgId ? { ...msg, paused: true } : msg
+            ));
+          }
           // 同步保存到数据库
           try {
             await fetch(`/api/messages/${userMsgId}`, {
@@ -270,6 +280,18 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
 
           try {
             const data = JSON.parse(dataStr);
+            // 接收数据库返回的用户消息 ID
+            if (data.type === "user_message_id" && data.userMessageId) {
+              dbUserMessageId = data.userMessageId;
+              // 更新前端消息的 ID 为数据库 ID
+              setMessages(prev => prev.map(msg =>
+                msg.id === currentUserMessageIdRef.current
+                  ? { ...msg, id: data.userMessageId }
+                  : msg
+              ));
+              currentUserMessageIdRef.current = data.userMessageId;
+              continue;
+            }
             if (data.type === "content_block_delta" && data.delta?.text) {
               assistantContent += data.delta.text;
               setDisplayedContent(prev => ({
