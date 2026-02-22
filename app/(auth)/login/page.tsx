@@ -23,16 +23,16 @@ export default function LoginPage() {
       });
 
       const data = await res.json();
-      console.log("登录响应:", res.ok, data);
 
       if (!res.ok) {
         setError(data.error || "登录失败");
+        setLoading(false);
         return;
       }
 
       // 登录成功，跳转到首页
-      alert("登录成功！即将跳转...");
-      window.location.href = "/";
+      setLoading(false);
+      window.location.replace("/");
     } catch (err) {
       setError("网络错误，请稍后重试");
     } finally {
