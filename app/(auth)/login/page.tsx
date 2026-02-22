@@ -23,6 +23,7 @@ export default function LoginPage() {
       });
 
       const data = await res.json();
+      console.log("登录响应:", res.ok, data);
 
       if (!res.ok) {
         setError(data.error || "登录失败");
@@ -30,6 +31,7 @@ export default function LoginPage() {
       }
 
       // 登录成功，跳转到首页
+      alert("登录成功！即将跳转...");
       window.location.href = "/";
     } catch (err) {
       setError("网络错误，请稍后重试");
