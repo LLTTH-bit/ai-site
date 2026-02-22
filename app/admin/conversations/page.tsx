@@ -11,6 +11,11 @@ export default async function AdminConversationsPage() {
   }
 
   const conversations = await prisma.conversation.findMany({
+    where: {
+      messages: {
+        some: {},
+      },
+    },
     orderBy: { updatedAt: "desc" },
     take: 100,
     include: {
