@@ -1,14 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import { Sun, Moon } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted ? resolvedTheme === "dark" : true;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +45,6 @@ export default function LoginPage() {
       }
 
       console.log("登录成功，准备跳转");
-      // 登录成功，跳转到首页
       setLoading(false);
       setTimeout(() => {
         window.location.href = "/";
@@ -47,17 +56,36 @@ export default function LoginPage() {
     }
   };
 
+  const toggleTheme = () => {
+    setTheme(isDark ? "light" : "dark");
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#171717]">
+    <div className={`min-h-screen flex items-center justify-center ${isDark ? "bg-[#171717]" : "bg-gray-100"}`}>
+      {/* Theme Toggle */}
+      <button
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 p-2 rounded-lg hover:bg-opacity-20 hover:bg-gray-500 transition-colors"
+        title={isDark ? "切换到浅色模式" : "切换到深色模式"}
+      >
+        {mounted && isDark ? (
+          <Sun className="w-6 h-6 text-white" />
+        ) : (
+          <Moon className="w-6 h-6 text-gray-800" />
+        )}
+      </button>
+
       <div className="w-full max-w-md p-8">
         <div className="text-center mb-8">
           <img src="/star.ico" alt="logo" className="w-20 h-20 mx-auto mb-4" />
           <div
-            className="text-5xl font-bold text-white mb-2"
+            className={`text-5xl font-bold mb-2 ${isDark ? "text-white" : "text-gray-800"}`}
             style={{
               fontFamily: "'Courier New', monospace",
               letterSpacing: '12px',
-              textShadow: '0 0 20px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.3)',
+              textShadow: isDark
+                ? '0 0 20px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.3)'
+                : '0 0 20px rgba(0,0,0,0.2), 0 0 40px rgba(0,0,0,0.1)',
             }}
           >
             LLTTH
@@ -83,7 +111,11 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="邮箱"
-              className="w-full px-4 py-3 bg-[#2f2f2f] text-white rounded-xl border border-gray-700 focus:outline-none focus:border-[#10a37f]"
+              className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-[#10a37f] ${
+                isDark
+                  ? "bg-[#2f2f2f] text-white border-gray-700"
+                  : "bg-white text-gray-800 border-gray-300"
+              }`}
               style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 400 }}
               required
             />
@@ -95,15 +127,18 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="密码"
-              className="w-full px-4 py-3 bg-[#2f2f2f] text-white rounded-xl border border-gray-700 focus:outline-none focus:border-[#10a37f]"
+              className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-[#10a37f] ${
+                isDark
+                  ? "bg-[#2f2f2f] text-white border-gray-700"
+                  : "bg-white text-gray-800 border-gray-300"
+              }`}
               style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 400 }}
               required
             />
           </div>
 
           <button
-            type="button"
-            onClick={handleSubmit}
+            type="submit"
             disabled={loading}
             className="w-full py-3 bg-[#10a37f] text-white rounded-xl hover:opacity-90 disabled:opacity-50 transition-opacity cursor-pointer"
             style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 500 }}
