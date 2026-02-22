@@ -141,13 +141,8 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl disabled:opacity-50 transition-colors cursor-pointer"
-            style={{
-              backgroundColor: '#3b82f6',
-              color: 'white',
-              fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-              fontWeight: 500
-            }}
+            className="w-full py-3 rounded-xl bg-blue-500 text-white hover:opacity-90 disabled:opacity-50 transition-opacity cursor-pointer"
+            style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 500 }}
           >
             {loading ? "登录中..." : "登录"}
           </button>
