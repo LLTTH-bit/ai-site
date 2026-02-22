@@ -88,7 +88,7 @@ function TypewriterText() {
 
 interface Message {
   id: string;
-  role: "user" | "assistant";
+  role: string;
   content: string;
 }
 
