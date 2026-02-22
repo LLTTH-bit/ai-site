@@ -310,28 +310,26 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
 
         {/* 右侧主题切换按钮 */}
         <button
+          className="theme-toggle-btn"
           onClick={() => {
-            // 先移除已存在的遮罩（防止重复）
-            const existingOverlay = document.getElementById("theme-transition-overlay-chat");
-            if (existingOverlay) {
-              existingOverlay.remove();
-            }
+            // 获取按钮位置（右上角）
+            const button = document.querySelector('.theme-toggle-btn');
+            const buttonRect = button?.getBoundingClientRect();
+            const buttonX = buttonRect ? buttonRect.left + buttonRect.width / 2 : window.innerWidth - 60;
+            const buttonY = buttonRect ? buttonRect.top + buttonRect.height / 2 : 50;
 
             // 使用当前实际主题来决定新主题
             const currentTheme = isDark ? "dark" : "light";
             const newTheme = currentTheme === "dark" ? "light" : "dark";
 
-            // 立即切换主题
-            setTheme(newTheme);
+            // 用新主题的颜色来创建第一阶段遮罩（从按钮位置扩散）
+            const bgColor = newTheme === "light" ? "#171717" : "#ffffff";
+            const textColor = newTheme === "light" ? "#ffffff" : "#171717";
 
-            // 用旧主题的颜色来创建覆盖层
-            const bgColor = currentTheme === "light" ? "#171717" : "#ffffff";
-            const textColor = currentTheme === "light" ? "#ffffff" : "#171717";
-
-            // 创建动画覆盖层
-            const overlay = document.createElement("div");
-            overlay.id = "theme-transition-overlay-chat";
-            overlay.style.cssText = `
+            // 创建第一阶段遮罩（扩散）
+            const overlay1 = document.createElement("div");
+            overlay1.id = "theme-transition-overlay-chat-1";
+            overlay1.style.cssText = `
               position: fixed;
               top: 0;
               left: 0;
@@ -344,7 +342,8 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
               flex-direction: column;
               align-items: center;
               justify-content: center;
-              animation: themeExpand 0.7s ease-out forwards;
+              clip-path: circle(0% at ${buttonX}px ${buttonY}px);
+              transition: clip-path 0.4s ease-out;
             `;
 
             // 创建图标

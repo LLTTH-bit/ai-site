@@ -57,27 +57,24 @@ export default function LoginPage() {
   };
 
   const toggleTheme = () => {
-    // 先移除已存在的遮罩（防止重复）
-    const existingOverlay = document.getElementById("theme-transition-overlay-login");
-    if (existingOverlay) {
-      existingOverlay.remove();
-    }
+    // 获取按钮位置（右上角）
+    const button = document.querySelector('.theme-toggle-btn');
+    const buttonRect = button?.getBoundingClientRect();
+    const buttonX = buttonRect ? buttonRect.left + buttonRect.width / 2 : window.innerWidth - 60;
+    const buttonY = buttonRect ? buttonRect.top + buttonRect.height / 2 : 50;
 
     // 使用当前实际主题来决定新主题
     const currentTheme = isDark ? "dark" : "light";
     const newTheme = currentTheme === "dark" ? "light" : "dark";
 
-    // 立即切换主题
-    setTheme(newTheme);
+    // 用新主题的颜色来创建第一阶段遮罩（从按钮位置扩散）
+    const bgColor = newTheme === "light" ? "#171717" : "#ffffff";
+    const textColor = newTheme === "light" ? "#ffffff" : "#171717";
 
-    // 用旧主题的颜色来创建覆盖层
-    const bgColor = currentTheme === "light" ? "#171717" : "#ffffff";
-    const textColor = currentTheme === "light" ? "#ffffff" : "#171717";
-
-    // 创建动画覆盖层
-    const overlay = document.createElement("div");
-    overlay.id = "theme-transition-overlay-login";
-    overlay.style.cssText = `
+    // 创建第一阶段遮罩（扩散）
+    const overlay1 = document.createElement("div");
+    overlay1.id = "theme-transition-overlay-login-1";
+    overlay1.style.cssText = `
       position: fixed;
       top: 0;
       left: 0;
@@ -90,7 +87,8 @@ export default function LoginPage() {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      animation: themeExpand 0.7s ease-out forwards;
+      clip-path: circle(0% at ${buttonX}px ${buttonY}px);
+      transition: clip-path 0.4s ease-out;
     `;
 
     // 创建图标
@@ -100,7 +98,8 @@ export default function LoginPage() {
       width: 80px;
       height: 80px;
       margin-bottom: 20px;
-      animation: fadeIn 0.3s ease-out;
+      opacity: 0;
+      transition: opacity 0.3s ease-out;
     `;
 
     // 创建 LLTTH 文字
@@ -113,37 +112,64 @@ export default function LoginPage() {
       letter-spacing: 12px;
       color: ${textColor};
       text-shadow: 0 0 20px ${textColor}80;
-      animation: fadeIn 0.3s ease-out;
+      opacity: 0;
+      transition: opacity 0.3s ease-out;
     `;
 
-    // 添加动画关键帧
-    if (!document.getElementById("theme-anim-style-login")) {
-      const style = document.createElement("style");
-      style.id = "theme-anim-style-login";
-      style.textContent = `
-        @keyframes themeExpand {
-          0% {
-            clip-path: circle(0% at 100% 0%);
-          }
-          100% {
-            clip-path: circle(150% at 100% 0%);
-          }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: scale(0.8); }
-          to { opacity: 1; transform: scale(1); }
-        }
-      `;
-      document.head.appendChild(style);
-    }
+    overlay1.appendChild(icon);
+    overlay1.appendChild(text);
+    document.body.appendChild(overlay1);
 
-    overlay.appendChild(icon);
-    overlay.appendChild(text);
-    document.body.appendChild(overlay);
+    // 立即扩散遮罩并显示内容
+    requestAnimationFrame(() => {
+      overlay1.style.clipPath = `circle(150% at ${buttonX}px ${buttonY}px)`;
+      icon.style.opacity = "1";
+      text.style.opacity = "1";
+    });
 
-    // 动画完成后移除覆盖层
+    // 400ms后（扩散完成）切换主题
     setTimeout(() => {
-      overlay.remove();
+      setTheme(newTheme);
+    }, 400);
+
+    // 700ms后创建第二阶段遮罩（收缩）
+    setTimeout(() => {
+      // 用新主题的颜色创建收缩遮罩
+      const overlay2 = document.createElement("div");
+      overlay2.id = "theme-transition-overlay-login-2";
+      overlay2.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: ${bgColor};
+        pointer-events: none;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        clip-path: circle(150% at ${buttonX}px ${buttonY}px);
+        transition: clip-path 0.4s ease-in;
+      `;
+
+      const icon2 = icon.cloneNode(true) as HTMLElement;
+      const text2 = text.cloneNode(true) as HTMLElement;
+      overlay2.appendChild(icon2);
+      overlay2.appendChild(text2);
+      document.body.appendChild(overlay2);
+
+      // 立即收缩遮罩
+      requestAnimationFrame(() => {
+        overlay2.style.clipPath = `circle(0% at ${buttonX}px ${buttonY}px)`;
+      });
+
+      // 收缩完成后移除所有遮罩
+      setTimeout(() => {
+        overlay1.remove();
+        overlay2.remove();
+      }, 400);
     }, 700);
   };
 
@@ -152,7 +178,7 @@ export default function LoginPage() {
       {/* Theme Toggle */}
       <button
         onClick={toggleTheme}
-        className="absolute top-4 right-4 p-2 rounded-lg hover:bg-opacity-20 hover:bg-gray-500 transition-colors"
+        className="theme-toggle-btn absolute top-4 right-4 p-2 rounded-lg hover:bg-opacity-20 hover:bg-gray-500 transition-colors"
         title={isDark ? "切换到浅色模式" : "切换到深色模式"}
       >
         {mounted && isDark ? (
