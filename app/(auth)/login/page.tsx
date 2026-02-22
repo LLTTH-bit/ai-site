@@ -57,11 +57,12 @@ export default function LoginPage() {
   };
 
   const toggleTheme = () => {
+    // 立即切换主题
     const newTheme = isDark ? "light" : "dark";
-    const oldTheme = theme;
+    setTheme(newTheme);
 
-    // 浅色 → 深色：黑色展开
-    // 深色 → 浅色：白色展开
+    // 用旧主题的颜色来创建覆盖层
+    const oldTheme = theme;
     const bgColor = oldTheme === "light" ? "#171717" : "#ffffff";
     const textColor = oldTheme === "light" ? "#ffffff" : "#171717";
 
@@ -132,9 +133,8 @@ export default function LoginPage() {
     overlay.appendChild(text);
     document.body.appendChild(overlay);
 
-    // 动画完成后切换主题并移除覆盖层
+    // 动画完成后移除覆盖层
     setTimeout(() => {
-      setTheme(newTheme);
       overlay.remove();
     }, 700);
   };
