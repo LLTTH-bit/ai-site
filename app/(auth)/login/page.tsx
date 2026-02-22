@@ -29,8 +29,8 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/");
-      router.refresh();
+      // 登录成功，跳转到首页
+      window.location.href = "/";
     } catch (err) {
       setError("网络错误，请稍后重试");
     } finally {
