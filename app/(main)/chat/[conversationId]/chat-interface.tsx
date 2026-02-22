@@ -115,7 +115,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
   const [displayedContent, setDisplayedContent] = useState<Record<string, string>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [isPaused, setIsPaused] = useState(false);
+  const isPausedRef = useRef(false);
 
   // 对话标题相关状态
   const [title, setTitle] = useState(conversation.title);
@@ -185,7 +185,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
   const sendMessage = async () => {
     if (!input.trim() || loading || isCurrentlyTyping()) return;
 
-    setIsPaused(false);
+    isPausedRef.current = false;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -226,7 +226,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
       let assistantContent = "";
 
       while (true) {
-        if (isPaused) {
+        if (isPausedRef.current) {
           reader.cancel();
           setDisplayedContent(prev => {
             const newContent = { ...prev };
@@ -584,7 +584,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
             />
             {isCurrentlyTyping() ? (
               <button
-                onClick={() => setIsPaused(true)}
+                onClick={() => { isPausedRef.current = true; }}
                 className="absolute right-3 bottom-3 p-2 rounded-xl bg-red-500 text-white hover:opacity-90 transition-all"
                 title="停止回复"
               >
