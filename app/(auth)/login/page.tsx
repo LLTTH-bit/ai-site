@@ -94,7 +94,7 @@ export default function LoginPage() {
       align-items: center;
       justify-content: center;
       clip-path: circle(0% at ${buttonX}px ${buttonY}px);
-      transition: clip-path 0.25s ease-out;
+      transition: clip-path 0.4s ease-out;
     `;
 
     // 创建图标
@@ -133,11 +133,11 @@ export default function LoginPage() {
       text.style.opacity = "1";
     });
 
-    // 250ms后（扩散完成）切换主题并移除遮罩
+    // 400ms后（扩散完成）切换主题并移除遮罩
     setTimeout(() => {
       setTheme(newTheme);
       overlay1.remove();
-    }, 250);
+    }, 400);
   };
 
   return (
