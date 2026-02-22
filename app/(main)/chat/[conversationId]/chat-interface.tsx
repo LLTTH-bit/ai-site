@@ -310,7 +310,96 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
 
         {/* 右侧主题切换按钮 */}
         <button
-          onClick={() => setTheme(isDark ? "light" : "dark")}
+          onClick={() => {
+            // 先移除已存在的遮罩（防止重复）
+            const existingOverlay = document.getElementById("theme-transition-overlay-chat");
+            if (existingOverlay) {
+              existingOverlay.remove();
+            }
+
+            // 使用当前实际主题来决定新主题
+            const currentTheme = isDark ? "dark" : "light";
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+            // 立即切换主题
+            setTheme(newTheme);
+
+            // 用旧主题的颜色来创建覆盖层
+            const bgColor = currentTheme === "light" ? "#171717" : "#ffffff";
+            const textColor = currentTheme === "light" ? "#ffffff" : "#171717";
+
+            // 创建动画覆盖层
+            const overlay = document.createElement("div");
+            overlay.id = "theme-transition-overlay-chat";
+            overlay.style.cssText = `
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: ${bgColor};
+              pointer-events: none;
+              z-index: 9999;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              animation: themeExpand 0.7s ease-out forwards;
+            `;
+
+            // 创建图标
+            const icon = document.createElement("img");
+            icon.src = "/star.ico";
+            icon.style.cssText = `
+              width: 80px;
+              height: 80px;
+              margin-bottom: 20px;
+              animation: fadeIn 0.3s ease-out;
+            `;
+
+            // 创建 LLTTH 文字
+            const text = document.createElement("div");
+            text.textContent = "LLTTH";
+            text.style.cssText = `
+              font-family: 'Courier New', monospace;
+              font-size: 48px;
+              font-weight: bold;
+              letter-spacing: 12px;
+              color: ${textColor};
+              text-shadow: 0 0 20px ${textColor}80;
+              animation: fadeIn 0.3s ease-out;
+            `;
+
+            // 添加动画关键帧
+            if (!document.getElementById("theme-anim-style-chat")) {
+              const style = document.createElement("style");
+              style.id = "theme-anim-style-chat";
+              style.textContent = `
+                @keyframes themeExpand {
+                  0% {
+                    clip-path: circle(0% at 100% 0%);
+                  }
+                  100% {
+                    clip-path: circle(150% at 100% 0%);
+                  }
+                }
+                @keyframes fadeIn {
+                  from { opacity: 0; transform: scale(0.8); }
+                  to { opacity: 1; transform: scale(1); }
+                }
+              `;
+              document.head.appendChild(style);
+            }
+
+            overlay.appendChild(icon);
+            overlay.appendChild(text);
+            document.body.appendChild(overlay);
+
+            // 动画完成后移除覆盖层
+            setTimeout(() => {
+              overlay.remove();
+            }, 700);
+          }}
           className={`p-2 rounded-lg ${isDark ? "hover:bg-[#3f3f3f]" : "hover:bg-gray-100"} transition-colors cursor-pointer ${isDark ? "text-white" : "text-gray-900"}`}
           title={isDark ? "切换到浅色模式" : "切换到深色模式"}
         >
