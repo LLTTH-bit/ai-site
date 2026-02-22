@@ -141,11 +141,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 rounded-xl hover:opacity-90 disabled:opacity-50 transition-opacity cursor-pointer ${
-              isDark
-                ? "bg-[#2f2f2f] text-white border border-gray-700 hover:border-[#10a37f]"
-                : "bg-white text-gray-800 border border-gray-300 hover:border-[#10a37f]"
-            }`}
+            className="w-full py-3 bg-[#10a37f] text-white rounded-xl hover:opacity-90 disabled:opacity-50 transition-opacity cursor-pointer"
             style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 500 }}
           >
             {loading ? "登录中..." : "登录"}
