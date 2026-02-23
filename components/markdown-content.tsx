@@ -25,7 +25,9 @@ function CodeBlock({ children, className, inline }: CodeBlockProps) {
 
   if (inline) {
     return (
-      <code className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-sm font-mono">
+      <code className={`px-1.5 py-0.5 rounded text-sm font-mono ${
+        isDark ? "bg-[#2d3748] text-gray-200" : "bg-gray-100 text-gray-800"
+      }`}>
         {children}
       </code>
     );
@@ -35,16 +37,20 @@ function CodeBlock({ children, className, inline }: CodeBlockProps) {
     <div className="relative group my-3">
       <button
         onClick={handleCopy}
-        className={`absolute top-2 right-2 p-2 rounded-lg transition-all duration-200 ${
+        className={`absolute top-2 right-2 p-2 rounded-lg transition-all duration-200 z-10 ${
           copied
             ? "bg-green-500 text-white"
-            : "bg-gray-700 hover:bg-gray-600 text-gray-300 opacity-0 group-hover:opacity-100"
+            : isDark
+              ? "bg-[#3d4a5c] hover:bg-[#4d5a6c] text-gray-300 opacity-0 group-hover:opacity-100"
+              : "bg-gray-300 hover:bg-gray-400 text-gray-700 opacity-0 group-hover:opacity-100"
         }`}
         title={copied ? "已复制!" : "复制代码"}
       >
         {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
       </button>
-      <pre className="bg-gray-900 dark:bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
+      <pre className={`p-4 rounded-lg overflow-x-auto ${
+        isDark ? "bg-[#1a202c] text-gray-100" : "bg-gray-50 text-gray-900"
+      }`}>
         <code className={`text-sm font-mono ${className || ""}`}>
           {children}
         </code>
@@ -109,7 +115,7 @@ export function MarkdownContent({ content, isDark = true }: { content: string; i
           elements.push(
             <div key={index} className="flex gap-2 ml-4 my-1">
               <span className="text-gray-500">{match[1]}.</span>
-              <span dangerouslySetInnerHTML={{ __html: parseInline(match[2]) }} />
+              <span dangerouslySetInnerHTML={{ __html: parseInline(match[2], isDark) }} />
             </div>
           );
           return;
@@ -122,7 +128,7 @@ export function MarkdownContent({ content, isDark = true }: { content: string; i
         elements.push(
           <div key={index} className="flex gap-2 ml-4 my-1">
             <span className="text-gray-500">•</span>
-            <span dangerouslySetInnerHTML={{ __html: parseInline(text) }} />
+            <span dangerouslySetInnerHTML={{ __html: parseInline(text, isDark) }} />
           </div>
         );
         return;
@@ -142,7 +148,7 @@ export function MarkdownContent({ content, isDark = true }: { content: string; i
 
       // 普通段落
       elements.push(
-        <p key={index} className="my-2" dangerouslySetInnerHTML={{ __html: parseInline(line) }} />
+        <p key={index} className="my-2" dangerouslySetInnerHTML={{ __html: parseInline(line, isDark) }} />
       );
     });
 
@@ -150,10 +156,13 @@ export function MarkdownContent({ content, isDark = true }: { content: string; i
   };
 
   // 处理行内样式
-  const parseInline = (text: string) => {
+  const parseInline = (text: string, isDarkMode: boolean) => {
+    const codeClass = isDarkMode
+      ? "px-1.5 py-0.5 bg-[#2d3748] text-gray-200 rounded text-sm font-mono"
+      : "px-1.5 py-0.5 bg-gray-100 text-gray-800 rounded text-sm font-mono";
     return text
       // 代码
-      .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-sm font-mono">$1</code>')
+      .replace(/`([^`]+)`/g, `<code class="${codeClass}">$1</code>`)
       // 加粗
       .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
       // 斜体
