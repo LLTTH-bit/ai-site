@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { conversationId, message, model = DEFAULT_MODEL } = result.data;
+    const { conversationId, message, model = DEFAULT_MODEL, thinking = false } = result.data;
 
     const conversation = await prisma.conversation.findFirst({
       where: { id: conversationId, userId: user.id },
@@ -78,18 +78,28 @@ export async function POST(req: NextRequest) {
 
     // 使用流式 API
     // 调用 AI API
-    console.log(`[AI API] Using model: ${model}`);
+    console.log(`[AI API] Using model: ${model}, thinking: ${thinking}`);
+
+    // 构建请求体
+    const requestBody: Record<string, unknown> = {
+      model: model,
+      messages: messages,
+      stream: true,
+    };
+
+    // 如果启用深度思考，添加相关参数
+    if (thinking) {
+      requestBody.enable_thinking = true;
+      requestBody.thinking_budget = 4096;
+    }
+
     const aiResponse = await fetch(`${AI_API_BASE}/chat/completions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${AI_API_KEY}`,
       },
-      body: JSON.stringify({
-        model: model,
-        messages: messages,
-        stream: true,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!aiResponse.ok || !aiResponse.body) {

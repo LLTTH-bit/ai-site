@@ -128,6 +128,12 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
   const [selectedModel, setSelectedModel] = useState(initialModel);
   const [showModelList, setShowModelList] = useState(false);
 
+  // 获取当前模型是否支持深度思考
+  const currentModelConfig = availableModels.find(m => m.id === selectedModel);
+  const supportsThinking = currentModelConfig?.supportsThinking || false;
+  // 深度思考状态
+  const [thinkingEnabled, setThinkingEnabled] = useState(supportsThinking ? (currentModelConfig?.defaultThinking || false) : false);
+
   // 防止 hydration 不匹配：未挂载时使用深色（服务端默认）
   const isDark = mounted ? theme === "dark" : true;
 
@@ -227,6 +233,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
           conversationId: conversation.id,
           message: input,
           model: selectedModel,
+          thinking: thinkingEnabled,
         }),
       });
 
@@ -580,8 +587,8 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
 
       {/* 输入区域 */}
       <div className="border-t border-border p-4">
-        {/* 模型选择器 */}
-        <div className="max-w-3xl mx-auto mb-3">
+        {/* 模型选择器和深度思考开关 */}
+        <div className="max-w-3xl mx-auto mb-3 flex items-center gap-3">
           <div className="relative inline-block">
             <button
               onClick={() => setShowModelList(!showModelList)}
@@ -598,7 +605,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
             {showModelList && (
               <div
                 onMouseLeave={() => setShowModelList(false)}
-                className={`absolute bottom-full mb-2 left-0 w-48 rounded-lg shadow-lg border overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200 origin-bottom-left ${
+                className={`absolute bottom-full mb-2 left-0 w-56 rounded-lg shadow-lg border overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200 origin-bottom-left ${
                   isDark ? "bg-[#2f2f2f] border-gray-700" : "bg-white border-gray-200"
                 }`}>
                 {availableModels.map((model) => (
@@ -606,6 +613,12 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
                     key={model.id}
                     onClick={() => {
                       setSelectedModel(model.id);
+                      // 切换模型时重置深度思考状态
+                      if (model.supportsThinking) {
+                        setThinkingEnabled(model.defaultThinking || false);
+                      } else {
+                        setThinkingEnabled(false);
+                      }
                       setShowModelList(false);
                     }}
                     className={`w-full px-3 py-2 text-left text-sm flex items-center justify-between hover:bg-opacity-50 ${
@@ -615,12 +628,39 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
                     }`}
                   >
                     <span>{model.name}</span>
-                    <span className="text-xs opacity-60">{model.provider}</span>
+                    <div className="flex items-center gap-1">
+                      {model.supportsThinking && (
+                        <span className="text-[10px] px-1 py-0.5 bg-purple-500/20 text-purple-400 rounded">深度思考</span>
+                      )}
+                      <span className="text-xs opacity-60">{model.provider}</span>
+                    </div>
                   </button>
                 ))}
               </div>
             )}
           </div>
+
+          {/* 深度思考开关 - 仅在支持的模型时显示 */}
+          {supportsThinking && (
+            <button
+              onClick={() => setThinkingEnabled(!thinkingEnabled)}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                thinkingEnabled
+                  ? "bg-purple-500/20 text-purple-400"
+                  : isDark
+                    ? "bg-[#2f2f2f] text-gray-400 hover:bg-[#3f3f3f]"
+                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              }`}
+              title={thinkingEnabled ? "关闭深度思考" : "开启深度思考"}
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
+              <span>深度思考</span>
+            </button>
+          )}
         </div>
 
         <div className="max-w-3xl mx-auto">

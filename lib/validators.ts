@@ -15,6 +15,7 @@ export const chatSchema = z.object({
   conversationId: z.string().min(1, "会话 ID 不能为空"),
   message: z.string().min(1, "消息不能为空").max(10000, "消息过长"),
   model: z.string().optional(),
+  thinking: z.boolean().optional(),
 });
 
 export const createConversationSchema = z.object({
