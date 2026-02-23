@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Copy, Check } from "lucide-react";
 
 interface CodeBlockProps {
@@ -57,7 +57,7 @@ export function MarkdownContent({ content, isDark = true }: { content: string; i
   // 简单的 Markdown 渲染
   const renderMarkdown = (text: string) => {
     const lines = text.split("\n");
-    const elements: JSX.Element[] = [];
+    const elements: React.JSX.Element[] = [];
     let inCodeBlock = false;
     let codeContent = "";
     let codeLanguage = "";
@@ -89,7 +89,7 @@ export function MarkdownContent({ content, isDark = true }: { content: string; i
       if (line.match(/^#{1,6}\s/)) {
         const level = line.match(/^#{1,6}/)![0].length;
         const text = line.replace(/^#{1,6}\s/, "");
-        const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+        const Tag = `h${level}` as keyof React.JSX.IntrinsicElements;
         const sizeClass = {
           1: "text-2xl font-bold",
           2: "text-xl font-bold",
