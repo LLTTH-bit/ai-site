@@ -38,6 +38,9 @@ export async function POST(request: NextRequest) {
     const mimeType = image.type || "image/jpeg";
     const dataUrl = `data:${mimeType};base64,${base64Image}`;
 
+    console.log("Image size:", image.size);
+    console.log("Base64 length:", base64Image.length);
+
     // 根据性别选择提示词
     const malePrompt = `Convert the uploaded portrait into an American-style professional headshot in corporate photography style, while preserving the original person's facial features and identity. Requirements: half-body portrait, blue textured studio background, soft natural studio lighting, high-definition clarity, realistic skin tones, clean and elegant composition. The person should wear business casual shirt, minimalist and elegant design, modern and professional style, paired with simple tie. Expression should be relaxed, confident, and natural with bright, engaging eyes and a genuine smile. Keep sharp focus on the face, with a slightly blurred background for depth. overall polished and professional.`;
 
@@ -69,14 +72,23 @@ export async function POST(request: NextRequest) {
       }
     );
 
+    const responseText = await response.text();
+    console.log("API response status:", response.status);
+    console.log("API response text:", responseText.substring(0, 500));
+
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Qwen API error:", errorText);
+      console.error("Qwen API error:", responseText);
       console.error("API Key:", apiKey ? "present" : "missing");
-      return NextResponse.json({ error: `图像生成失败: ${errorText}` }, { status: 500 });
+      return NextResponse.json({ error: `图像生成失败: ${responseText}` }, { status: 500 });
     }
 
-    const result = await response.json();
+    let result;
+    try {
+      result = JSON.parse(responseText);
+    } catch (e) {
+      console.error("JSON parse error:", e);
+      return NextResponse.json({ error: `响应解析失败: ${responseText.substring(0, 100)}` }, { status: 500 });
+    }
 
     // 解析返回的图像
     const data = result.data;
