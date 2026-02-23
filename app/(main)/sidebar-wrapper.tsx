@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PlusCircle, Settings, User, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
+import { PlusCircle, Settings, User, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Camera } from "lucide-react";
 import ConversationSidebar from "@/components/conversation-sidebar";
 import { LogoutButton } from "./logout-button";
 import PersonalCenter from "@/components/personal-center";
@@ -101,6 +101,15 @@ export function SidebarWrapper({ conversations, isAdmin, email, nickname }: Side
               <PlusCircle className="w-5 h-5" />
               <span className="font-medium">{isCreating ? "创建中..." : "新建对话"}</span>
             </button>
+
+            {/* 学术照相馆链接 */}
+            <Link
+              href="/photo-studio"
+              className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-sidebar-accent transition-colors w-full mb-2"
+            >
+              <Camera className="w-5 h-5" />
+              <span className="font-medium">学术照相馆</span>
+            </Link>
 
             {/* 你的聊天 - 可收起 */}
             <div>
