@@ -33,14 +33,20 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
+                var theme = 'light';
                 try {
                   var savedTheme = localStorage.getItem('theme');
                   if (savedTheme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                  } else {
-                    document.documentElement.classList.add('light');
+                    theme = 'dark';
                   }
                 } catch (e) {}
+
+                // 立即应用主题，不等待
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.add('light');
+                }
               })();
             `,
           }}
@@ -54,6 +60,7 @@ export default function RootLayout({
           defaultTheme="light"
           enableSystem={false}
           disableTransitionOnChange
+          enableTransitionOnChange={false}
         >
           {children}
         </ThemeProvider>
