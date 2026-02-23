@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
+import { writeFile, mkdir } from "fs/promises";
+import { join } from "path";
+import { randomUUID } from "crypto";
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,23 +35,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "请选择性别" }, { status: 400 });
     }
 
-    // 先上传图片到服务器
-    const uploadFormData = new FormData();
-    uploadFormData.append("image", image);
+    // 直接保存图片到服务器
+    const ext = image.name.split(".").pop() || "jpg";
+    const filename = `${randomUUID()}.${ext}`;
+    const uploadDir = join(process.cwd(), "public", "uploads");
 
-    const origin = request.headers.get("origin") || `http://localhost:3000`;
-    const uploadResponse = await fetch(`${origin}/api/upload`, {
-      method: "POST",
-      body: uploadFormData,
-    });
+    await mkdir(uploadDir, { recursive: true });
 
-    if (!uploadResponse.ok) {
-      const errorData = await uploadResponse.json();
-      return NextResponse.json({ error: `图片上传失败: ${errorData.error}` }, { status: 500 });
-    }
+    const buffer = await image.arrayBuffer();
+    const filepath = join(uploadDir, filename);
+    await writeFile(filepath, Buffer.from(buffer));
 
-    const { url: uploadedUrl } = await uploadResponse.json();
-    const fullImageUrl = `${origin}${uploadedUrl}`;
+    // 获取服务器地址
+    const host = request.headers.get("host") || "localhost:3000";
+    const protocol = request.headers.get("x-forwarded-proto") || "http";
+    const fullImageUrl = `${protocol}://${host}/uploads/${filename}`;
 
     console.log("Uploaded image URL:", fullImageUrl);
 
@@ -88,8 +89,7 @@ export async function POST(request: NextRequest) {
     console.log("API response text:", responseText.substring(0, 500));
 
     if (!response.ok) {
-      console.error("Qwen API error:", responseText);
-      console.error("API Key:", apiKey ? "present" : "missing");
+      console.error("API error:", responseText);
       return NextResponse.json({ error: `图像生成失败: ${responseText}` }, { status: 500 });
     }
 
