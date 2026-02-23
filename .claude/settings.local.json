@@ -31,7 +31,9 @@
       "Bash(git add -A && git commit -m \"Fix: Use database message ID for paused status\" 2>&1)",
       "Bash(git add -A && git commit -m \"Fix TypeScript type error\" 2>&1)",
       "Bash(git add -A && git commit -m \"Fix: Smart scrolling - only auto-scroll when user is near bottom\" 2>&1)",
-      "Bash(git add -A && git commit -m \"Add DeepSeek V3.2 model with thinking toggle\" 2>&1)"
+      "Bash(git add -A && git commit -m \"Add DeepSeek V3.2 model with thinking toggle\" 2>&1)",
+      "Bash(git config --global http.postBuffer 524288000 && git push origin main 2>&1)",
+      "Bash(git add -A && git commit -m \"Change 深度思考 to D\" && git push origin main 2>&1)"
     ]
   }
 }

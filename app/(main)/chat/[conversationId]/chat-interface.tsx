@@ -630,7 +630,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
                     <span>{model.name}</span>
                     <div className="flex items-center gap-1">
                       {model.supportsThinking && (
-                        <span className="text-[10px] px-1 py-0.5 bg-purple-500/20 text-purple-400 rounded">深度思考</span>
+                        <span className="text-[10px] px-1 py-0.5 bg-purple-500/20 text-purple-400 rounded">D</span>
                       )}
                       <span className="text-xs opacity-60">{model.provider}</span>
                     </div>
@@ -658,7 +658,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
                 <path d="M2 17l10 5 10-5" />
                 <path d="M2 12l10 5 10-5" />
               </svg>
-              <span>深度思考</span>
+              <span>D</span>
             </button>
           )}
         </div>
