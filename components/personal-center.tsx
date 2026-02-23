@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, User, MessageSquare, Hash, Zap, CreditCard, ChevronDown, ChevronUp } from "lucide-react";
+import { X, User, MessageSquare, Zap, ChevronDown, ChevronUp } from "lucide-react";
 
 interface UserStats {
   user: {
@@ -113,25 +113,11 @@ export default function PersonalCenter({ isOpen, onClose }: PersonalCenterProps)
                   <p className="text-xs text-slate-500">对话数</p>
                 </div>
                 <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4">
-                  <Hash className="w-5 h-5 text-purple-500 mb-2" />
-                  <p className="text-2xl font-bold text-slate-800 dark:text-white">
-                    {stats.stats.messageCount}
-                  </p>
-                  <p className="text-xs text-slate-500">消息数</p>
-                </div>
-                <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4">
                   <Zap className="w-5 h-5 text-yellow-500 mb-2" />
                   <p className="text-2xl font-bold text-slate-800 dark:text-white">
                     {stats.stats.totalTokens.toLocaleString()}
                   </p>
                   <p className="text-xs text-slate-500">总 Token</p>
-                </div>
-                <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4">
-                  <CreditCard className="w-5 h-5 text-orange-500 mb-2" />
-                  <p className="text-2xl font-bold text-orange-600">
-                    ¥{stats.stats.totalCost.toFixed(4)}
-                  </p>
-                  <p className="text-xs text-slate-500">总费用</p>
                 </div>
               </div>
 

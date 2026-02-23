@@ -48,7 +48,8 @@
       "Bash(git add -A && git commit -m \"Fix: dashboard only count conversations with messages\" && git push origin main 2>&1)",
       "Bash(git add -A && git commit -m \"Add cleanup script for empty conversations\" && git push origin main 2>&1)",
       "Bash(git add -A && git commit -m \"Add clickable today token with detailed model breakdown and cost\" && git push origin main 2>&1)",
-      "Bash(git add -A && git commit -m \"Add personal center for non-admin users\" && git push origin main 2>&1)"
+      "Bash(git add -A && git commit -m \"Add personal center for non-admin users\" && git push origin main 2>&1)",
+      "Bash(git add -A && git commit -m \"Remove message count and total cost from personal center\" && git push origin main 2>&1)"
     ]
   }
 }
