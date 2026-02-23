@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     // 直接保存图片到服务器
     const ext = image.name.split(".").pop() || "jpg";
     const filename = `${randomUUID()}.${ext}`;
-    const uploadDir = join(process.cwd(), "public", "uploads");
+    const uploadDir = join(process.cwd(), "public", "photos");
 
     await mkdir(uploadDir, { recursive: true });
 
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     // 获取服务器地址
     const host = request.headers.get("host") || "localhost:3000";
     const protocol = request.headers.get("x-forwarded-proto") || "http";
-    const fullImageUrl = `${protocol}://${host}/uploads/${filename}`;
+    const fullImageUrl = `${protocol}://${host}/photos/${filename}`;
 
     console.log("Uploaded image URL:", fullImageUrl);
 
