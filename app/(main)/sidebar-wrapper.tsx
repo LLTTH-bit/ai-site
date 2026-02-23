@@ -136,7 +136,7 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
             style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
           >
             <Link
-              href="/admin"
+              href="/admin/users"
               className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sm transition-colors"
             >
               <Settings className="w-4 h-4" />
