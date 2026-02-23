@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     const response = await fetch(
-      `${apiBase}/chat/completions`,
+      `${apiBase}/images/generations`,
       {
         method: "POST",
         headers: {
@@ -63,15 +63,9 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({
           model: "Qwen/Qwen-Image-Edit-2509",
-          messages: [
-            {
-              role: "user",
-              content: [
-                { type: "text", text: prompt },
-                { type: "image_url", image_url: { url: dataUrl } }
-              ]
-            }
-          ]
+          prompt: prompt,
+          image_size: "1024x1024",
+          batch_size: 1,
         }),
       }
     );
@@ -85,29 +79,13 @@ export async function POST(request: NextRequest) {
     const result = await response.json();
 
     // 解析返回的图像
-    const content = result.choices?.[0]?.message?.content;
-    if (!content) {
+    const images = result.images;
+    if (!images || !images[0] || !images[0].url) {
+      console.error("API response:", result);
       return NextResponse.json({ error: "未获取到生成的图像" }, { status: 500 });
     }
 
-    // 提取图像URL（可能是base64或URL）
-    let imageUrl = "";
-    try {
-      const parsedContent = typeof content === "string" ? JSON.parse(content) : content;
-      imageUrl = parsedContent.image || parsedContent.url || parsedContent;
-    } catch {
-      imageUrl = content;
-    }
-
-    // 如果是相对URL，添加前缀
-    if (imageUrl.startsWith("/") || imageUrl.startsWith("http")) {
-      // 已经是完整URL
-    } else {
-      // 可能是base64数据
-      if (!imageUrl.startsWith("data:") && !imageUrl.startsWith("http")) {
-        imageUrl = `data:image/jpeg;base64,${imageUrl}`;
-      }
-    }
+    const imageUrl = images[0].url;
 
     return NextResponse.json({ image: imageUrl });
   } catch (error) {
