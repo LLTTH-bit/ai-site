@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PlusCircle, Settings, User, ChevronLeft, ChevronRight } from "lucide-react";
+import { PlusCircle, Settings, User, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import ConversationSidebar from "@/components/conversation-sidebar";
 import { LogoutButton } from "./logout-button";
 
@@ -24,6 +24,7 @@ interface SidebarWrapperProps {
 export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapperProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [historyExpanded, setHistoryExpanded] = useState(true);
   const router = useRouter();
 
   const handleCreateConversation = async () => {
@@ -60,34 +61,68 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
         }`}
         style={{ transition: "width 0.3s ease-in-out" }}
       >
+        {/* 顶部：Logo 和 LLTTH */}
         <div
-          className={`p-3 border-b border-sidebar-border ${
+          className={`p-4 flex items-center gap-3 ${
             collapsed ? "opacity-0 invisible" : "opacity-100 visible"
           }`}
           style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
         >
-          <button
-            onClick={handleCreateConversation}
-            disabled={isCreating}
-            className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-sidebar-accent transition-colors w-full disabled:opacity-50"
+          <img src="/star.ico" alt="logo" className="w-8 h-8" />
+          <span
+            className="text-lg font-bold tracking-wider"
+            style={{
+              fontFamily: "'Courier New', monospace",
+              textShadow: "0 0 10px rgba(255, 255, 255, 0.3)",
+            }}
           >
-            <PlusCircle className="w-5 h-5" />
-            <span className="font-medium">{isCreating ? "创建中..." : "新建对话"}</span>
-          </button>
+            LLTTH
+          </span>
         </div>
 
-        {/* 对话列表 */}
+        {/* 对话列表（包含新建对话和历史） */}
         <div
           className={`flex-1 overflow-y-auto ${
             collapsed ? "opacity-0 invisible" : "opacity-100 visible"
           }`}
           style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
         >
-          <div className="p-3">
-            <h3 className="text-xs font-bold text-sidebar-foreground/80 uppercase tracking-wider mb-2 px-3">
-              对话历史
-            </h3>
-            <ConversationSidebar initialConversations={conversations} />
+          <div className="p-3 pt-0">
+            {/* 你的聊天 - 可收起 */}
+            <div className="mb-2">
+              <button
+                onClick={() => setHistoryExpanded(!historyExpanded)}
+                className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-sidebar-accent transition-colors"
+              >
+                <h3 className="text-xs font-bold text-sidebar-foreground/80 uppercase tracking-wider">
+                  你的聊天
+                </h3>
+                {historyExpanded ? (
+                  <ChevronUp className="w-4 h-4 text-sidebar-foreground/60" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-sidebar-foreground/60" />
+                )}
+              </button>
+
+              {/* 新建对话按钮 - 放在"你的聊天"里面 */}
+              <button
+                onClick={handleCreateConversation}
+                disabled={isCreating}
+                className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-sidebar-accent transition-colors w-full disabled:opacity-50 mb-2"
+              >
+                <PlusCircle className="w-5 h-5" />
+                <span className="font-medium">{isCreating ? "创建中..." : "新建对话"}</span>
+              </button>
+
+              {/* 对话历史列表 - 可收起 */}
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  historyExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                }`}
+              >
+                <ConversationSidebar initialConversations={conversations} />
+              </div>
+            </div>
           </div>
         </div>
 
