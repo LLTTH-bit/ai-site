@@ -23,8 +23,8 @@ export default async function AdminDashboard() {
   ] = await Promise.all([
     prisma.user.count(),
     prisma.user.count({ where: { status: "ACTIVE" } }),
-    prisma.conversation.count(),
-    prisma.conversation.count({ where: { createdAt: { gte: today } } }),
+    prisma.conversation.count({ where: { messages: { some: {} } } }),
+    prisma.conversation.count({ where: { createdAt: { gte: today }, messages: { some: {} } } }),
     prisma.apiUsageLog.aggregate({
       _sum: { totalTokens: true },
       where: { createdAt: { gte: today } },
