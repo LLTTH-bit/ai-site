@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           "model": "doubao-seedream-4-5-251128",
           "prompt": prompt,
-          "image": dataUrl,
+          "image_url": dataUrl,
           "size": "2K",
           "watermark": false
         }),
