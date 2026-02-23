@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Copy, Check } from "lucide-react";
+import katex from "katex";
+import "katex/dist/katex.min.css";
 
 interface CodeBlockProps {
   children?: React.ReactNode;
@@ -68,8 +70,41 @@ export function MarkdownContent({ content, isDark = true }: { content: string; i
     let inCodeBlock = false;
     let codeContent = "";
     let codeLanguage = "";
+    let inBlockMath = false;
+    let blockMathContent = "";
+
+    // 检测块级公式 $$...$$
+    const blockMathRegex = /\$\$([^$]+)\$\$/g;
 
     lines.forEach((line, index) => {
+      // 检查是否是独立的块级公式行
+      const blockMathMatch = line.match(/^\$\$([^$]+)\$\$$/);
+      if (blockMathMatch) {
+        elements.push(renderBlockMath(blockMathMatch[1], isDark));
+        return;
+      }
+
+      // 检查块级公式开始
+      if (line.includes("$$") && !line.startsWith("```")) {
+        const parts = line.split("$$");
+        if (parts.length >= 2) {
+          // 处理行中的块级公式
+          for (let i = 0; i < parts.length; i++) {
+            if (i % 2 === 1 && parts[i]) {
+              // 这是公式部分
+              elements.push(renderBlockMath(parts[i], isDark));
+            } else if (parts[i]) {
+              // 这是普通文本
+              const processed = parseInline(parts[i], isDark);
+              if (processed) {
+                elements.push(<p key={`${index}-${i}`} className="my-2" dangerouslySetInnerHTML={{ __html: processed }} />);
+              }
+            }
+          }
+          return;
+        }
+      }
+
       // 代码块
       if (line.startsWith("```")) {
         if (!inCodeBlock) {
@@ -161,7 +196,21 @@ export function MarkdownContent({ content, isDark = true }: { content: string; i
     const codeClass = isDarkMode
       ? "px-1.5 py-0.5 bg-[#2d3748] text-gray-200 rounded text-sm font-mono"
       : "px-1.5 py-0.5 bg-gray-100 text-gray-800 rounded text-sm font-mono";
-    return text
+
+    // 先处理行内公式 $...$
+    let result = text.replace(/\$([^$\n]+)\$/g, (match, formula) => {
+      try {
+        const html = katex.renderToString(formula, {
+          throwOnError: false,
+          displayMode: false,
+        });
+        return `<span class="katex-inline">${html}</span>`;
+      } catch {
+        return match;
+      }
+    });
+
+    return result
       // 代码
       .replace(/`([^`]+)`/g, `<code class="${codeClass}">$1</code>`)
       // 加粗
@@ -174,6 +223,30 @@ export function MarkdownContent({ content, isDark = true }: { content: string; i
       .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-500 hover:underline" target="_blank">$1</a>')
       // 转义 HTML
       .replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  };
+
+  // 渲染块级公式 $$...$$
+  const renderBlockMath = (formula: string, isDarkMode: boolean): React.ReactNode => {
+    const codeClass = isDarkMode
+      ? "px-1.5 py-0.5 bg-[#2d3748] text-gray-200 rounded text-sm font-mono"
+      : "px-1.5 py-0.5 bg-gray-100 text-gray-800 rounded text-sm font-mono";
+    try {
+      const html = katex.renderToString(formula, {
+        throwOnError: false,
+        displayMode: true,
+      });
+      return (
+        <div
+          className={`my-4 p-4 rounded-lg overflow-x-auto ${
+            isDarkMode ? "bg-[#1a202c]" : "bg-gray-50"
+          }`}
+          style={{ textAlign: "center" }}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      );
+    } catch {
+      return <code className={codeClass}>{formula}</code>;
+    }
   };
 
   return <div className={isDark ? "prose prose-invert max-w-none" : "prose max-w-none"}>{renderMarkdown(content)}</div>;
