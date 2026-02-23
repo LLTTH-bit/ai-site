@@ -1,7 +1,1156 @@
-@import url('https://cdn.bootcdn.net/ajax/libs/KaTeX/0.16.9/katex.min.css');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+
+/* KaTeX 核心样式 - 内联以确保加载 */
+.katex {
+  font: normal 1.1em KaTeX_Main, Times New Roman, serif;
+  line-height: 1.2;
+  text-rendering: auto;
+}
+.katex .katex-mathml {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
+.katex .katex-html > .katex-mathml {
+  position: absolute;
+}
+.katex .katex-html {
+  display: inline-block;
+  text-align: left;
+}
+.katex .katex-html > .base {
+  display: inline-block;
+}
+.katex .mord {
+  color: inherit;
+}
+.katex .mop {
+  color: inherit;
+}
+.katex .mbin {
+  color: inherit;
+}
+.katex .mrel {
+  color: inherit;
+}
+.katex .mopen, .katex .mclose {
+  color: inherit;
+}
+.katex .mpunct {
+  color: inherit;
+}
+.katex .minner {
+  color: inherit;
+}
+.katex .sizing.reset-size1.size1, .katex .fontsize-ensurer.reset-size1.size1 {
+  font-size: 1em;
+}
+.katex .sizing.reset-size2.size2, .katex .fontsize-ensurer.reset-size2.size2 {
+  font-size: 1.1em;
+}
+.katex .sizing.reset-size3.size3, .katex .fontsize-ensurer.reset-size3.size3 {
+  font-size: 1.3em;
+}
+.katex .sizing.reset-size4.size4, .katex .fontsize-ensurer.reset-size4.size4 {
+  font-size: 1.5em;
+}
+.katex .sizing.reset-size5.size5, .katex .fontsize-ensurer.reset-size5.size5 {
+  font-size: 1.7em;
+}
+.katex .sizing.reset-size6.size6, .katex .fontsize-ensurer.reset-size6.size6 {
+  font-size: 2em;
+}
+.katex .sizing.reset-size7.size7, .katex .fontsize-ensurer.reset-size7.size7 {
+  font-size: 2.5em;
+}
+.katex .sizing.reset-size8.size8, .katex .fontsize-ensurer.reset-size8.size8 {
+  font-size: 3em;
+}
+.katex .sizing.reset-size9.size9, .katex .fontsize-ensurer.reset-size9.size9 {
+  font-size: 3.5em;
+}
+.katex .sizing.reset-size10.size10, .katex .fontsize-ensurer.reset-size10.size10 {
+  font-size: 4.5em;
+}
+.katex .sizing.reset-size11.size11, .katex .fontsize-ensurer.reset-size11.size11 {
+  font-size: 6em;
+}
+.katex .sizing.reset-size12.size12, .katex .fontsize-ensurer.reset-size12.size12 {
+  font-size: 7.5em;
+}
+.katex .frac-line {
+  display: inline-block;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .mfrac > span > span {
+  text-align: center;
+}
+.katex .mfrac .frac-line {
+  width: 100%;
+}
+.katex .mfrac .frac-line::after {
+  content: "";
+  display: block;
+  margin-top: -0.04em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .mfrac .frac-line span::after {
+  content: "\200B";
+}
+.katex .mfrac span .vlist-t {
+  vertical-align: middle;
+  text-align: center;
+}
+.katex .mfrac span .vlist-t .vlist-r {
+  vertical-align: baseline;
+}
+.katex .mfrac span .vlist-t .vlist-s {
+  vertical-align: top;
+  width: 0;
+}
+.katex .mfrac .frac-line, .katex .mfrac .frac-line {
+  width: 100%;
+}
+.katex .mfrac .frac-line, .katex .mfrac .frac-line {
+  width: auto;
+}
+.katex .mfrac .frac-line::before, .katex .mfrac .frac-line::after {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.07em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.07em;
+}
+.katex .mfrac .frac-line::after {
+  margin-top: -0.15em;
+}
+.katex .mord .mord {
+  color: inherit;
+}
+.katex .mop .mop {
+  color: inherit;
+}
+.katex .mord + .mbin, .katex .mord + .mrel, .katex .mord + .mopen, .katex .mord + .mclose, .katex .mord + .mpunct, .katex .mord + .minner {
+  color: inherit;
+}
+.katex .mbin + .mord, .katex .mbin + .mop, .katex .mbin + .mopen, .katex .mbin + .minner {
+  color: inherit;
+}
+.katex .mrel + .mord, .katex .mrel + .mop, .katex .mrel + .mopen, .katex .mrel + .minner {
+  color: inherit;
+}
+.katex .mopen + .mord, .katex .mopen + .mop, .katex .mopen + .mclose, .katex .mopen + .mpunct, .katex .mopen + .minner {
+  color: inherit;
+}
+.katex .mclose + .mord, .katex .mclose + .mop, .katex .mclose + .mclose, .katex .mclose + .mpunct, .katex .mclose + .minner {
+  color: inherit;
+}
+.katex .mpunct + .mord, .katex .mpunct + .mop, .katex .mpunct + .mclose, .katex .mpunct + .mpunct, .katex .mpunct + .minner {
+  color: inherit;
+}
+.katex .minner + .mord, .katex .minner + .mop, .katex .minner + .mclose, .katex .minner + .mpunct, .katex .minner + .minner {
+  color: inherit;
+}
+.katex .mop.mop {
+  color: inherit;
+}
+.katex .mord.mord {
+  color: inherit;
+}
+.katex .vlist-t .vlist-s {
+  display: inline-block;
+  width: 0;
+  vertical-align: baseline;
+}
+.katex .vlist-t .vlist-r {
+  display: inline-block;
+  vertical-align: baseline;
+  vertical-align: -webkit-calc(-0.3em - 0.03em);
+  vertical-align: -moz-calc(-0.3em - 0.03em);
+  vertical-align: calc(-0.3em - 0.03em);
+}
+.katex .vlist-t {
+  display: table;
+  position: relative;
+}
+.katex .vlist-t .vlist-r {
+  display: table-row;
+}
+.katex .vlist-t .vlist-s {
+  display: table-cell;
+  position: relative;
+  padding: 0;
+  width: 0;
+}
+.katex .vlist-t .vlist-t2 {
+  display: table;
+  position: relative;
+  border-spacing: 0;
+}
+.katex .vlist-t .vlist-t2 .vlist-r {
+  display: table-row;
+  height: 100%;
+}
+.katex .vlist-t .vlist-t2 .vlist-s {
+  display: table-cell;
+  position: relative;
+  vertical-align: bottom;
+  height: 100%;
+}
+.katex .strut {
+  display: inline-block;
+}
+.katex .op-symbol {
+  position: relative;
+}
+.katex .op-symbol.small-op {
+  font-family: KaTeX_Size1;
+}
+.katex .op-symbol.large-op {
+  font-family: KaTeX_Size2;
+  vertical-align: -0.5em;
+}
+.katex .op-limits .vlist-t {
+  text-align: center;
+}
+.katex .accent > .vlist-t {
+  text-align: center;
+}
+.katex .accent .accent-body > span {
+  width: 0;
+}
+.katex .accent .accent-body {
+  position: relative;
+}
+.katex .accent .accent-body::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 0;
+  bottom: 0;
+  left: 0;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .accent .accent-body-accent {
+  position: relative;
+}
+.katex .accent .accent-body-accent::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 0;
+  bottom: 0;
+  left: 0;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .m fraction {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+.katex .m fraction .frac-line {
+  display: inline-block;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  vertical-align: middle;
+}
+.katex .m fraction .frac-line::before {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.02em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.02em;
+}
+.katex .m fraction .frac-line::after {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.02em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.02em;
+}
+.katex .m fraction .frac-line span::before {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-bottom: -0.03em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.03em;
+}
+.katex .m fraction .frac-line span::after {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.02em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.02em;
+}
+.katex .m fraction .frac-line span > span {
+  display: inline-block;
+  position: relative;
+}
+.katex .m fraction .frac-line span > span > span {
+  display: inline-block;
+  position: relative;
+  vertical-align: baseline;
+}
+.katex .m fraction .frac-line span > span > span::after {
+  content: "\200B";
+}
+.katex .m fraction .frac-line .frac-line {
+  width: 100%;
+}
+.katex .m fraction .frac-line .frac-line::before, .katex .m fraction .frac-line .frac-line::after {
+  width: 0;
+  border-bottom-width: 0;
+}
+.katex .m fraction .frac-line .frac-line::after {
+  content: "";
+  display: table-row;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .m fraction .frac-line .frac-line span::before, .katex .m fraction .frac-line .frac-line span::after {
+  display: table-cell;
+  content: "";
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  vertical-align: baseline;
+}
+.katex .m fraction .frac-line .frac-line span::before {
+  border-bottom-width: 0;
+}
+.katex .m fraction .frac-line .frac-line span::after {
+  border-bottom-width: 0;
+}
+.katex .m fraction .frac-line span > span {
+  text-align: center;
+}
+.katex .m fraction .frac-line span > span > span {
+  display: inline-block;
+  position: relative;
+  vertical-align: baseline;
+}
+.katex .m fraction .frac-line span > span > span::after {
+  content: "\200B";
+}
+.katex .m fraction .frac-line .frac-line {
+  width: 100%;
+}
+.katex .m fraction .frac-line .frac-line::before, .katex .m fraction .frac-line .frac-line::after {
+  width: 0;
+  border-bottom-width: 0;
+}
+.katex .m fraction .frac-line .frac-line::after {
+  content: "";
+  display: table-row;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .m fraction .frac-line .frac-line span > span::before, .katex .m fraction .frac-line .frac-line span > span::after {
+  display: table-cell;
+  content: "";
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  vertical-align: baseline;
+}
+.katex .m fraction .frac-line .frac-line span > span::before {
+  border-bottom-width: 0;
+}
+.katex .m fraction .frac-line .frac-line span > span::after {
+  border-bottom-width: 0;
+}
+.katex .m frac-line {
+  display: inline-block;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .m frac-line::before {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.025em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.025em;
+}
+.katex .m frac-line::after {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.025em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.025em;
+}
+.katex .m frac-line span::before, .katex .m frac-line span::after {
+  display: inline-block;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  vertical-align: baseline;
+}
+.katex .m frac-line span::before {
+  border-bottom-width: 0;
+}
+.katex .m frac-line span::after {
+  border-bottom-width: 0;
+}
+.katex .m frac-line span > span {
+  display: inline-block;
+  position: relative;
+}
+.katex .m frac-line span > span > span {
+  display: inline-block;
+  position: relative;
+  vertical-align: baseline;
+}
+.katex .m frac-line span > span > span::after {
+  content: "\200B";
+}
+.katex .m fraction .frac-line {
+  width: 100%;
+}
+.katex .m fraction .frac-line::before, .katex .m fraction .frac-line::after {
+  width: 0;
+  border-bottom-width: 0;
+}
+.katex .m fraction .frac-line::after {
+  content: "";
+  display: table-row;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .m fraction .frac-line span > span::before, .katex .m fraction .frac-line span > span::after {
+  display: table-cell;
+  content: "";
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  vertical-align: baseline;
+}
+.katex .m fraction .frac-line span > span::before {
+  border-bottom-width: 0;
+}
+.katex .m fraction .frac-line span > span::after {
+  border-bottom-width: 0;
+}
+.katex .m fraction .frac-line span > span {
+  text-align: center;
+}
+.katex .m fraction .frac-line span > span > span {
+  display: inline-block;
+  position: relative;
+  vertical-align: baseline;
+}
+.katex .m fraction .frac-line span > span > span::after {
+  content: "\200B";
+}
+.katex .m overline .overline-line {
+  display: inline-block;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .m overline .overline-line::before {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.026em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.026em;
+}
+.katex .m overline .overline-line::after {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.026em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.026em;
+}
+.katex .m underline .underline-line {
+  display: inline-block;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .m underline .underline-line::before {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.026em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.026em;
+}
+.katex .m underline .underline-line::after {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.026em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.026em;
+}
+.katex .m sqrt {
+  display: inline-block;
+  position: relative;
+}
+.katex .m sqrt .sqrt-line {
+  display: inline-block;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  transform: translateY(0.11em);
+}
+.katex .m sqrt .sqrt-line::before {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.04em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .m sqrt .sqrt-line::after {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.04em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .m sqrt > span > span {
+  display: inline-block;
+  text-align: left;
+}
+.katex .m sqrt > span > span > span {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+.katex .m sqrt > span > span > span > span {
+  display: inline-block;
+  position: absolute;
+  top: -0.5em;
+  left: 0;
+}
+.katex .m sqrt > span > span > span::after {
+  content: "";
+  display: inline-block;
+  width: 0.45em;
+  height: 0.4em;
+  border-left: 0.04em solid;
+  border-bottom: 0.04em solid;
+  border-bottom-left-radius: 100%;
+}
+.katex .m sqrt > span {
+  padding-left: 0.7em;
+}
+.katex .m sqrt > span::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-right: 0.7em solid;
+  border-top: 0.7em solid transparent;
+  border-bottom: 0.7em solid transparent;
+  transform: translateY(-0.1em);
+}
+.katex .m root .sqrt {
+  display: inline-block;
+  position: relative;
+  padding-right: 0.6em;
+}
+.katex .m root .sqrt-line {
+  display: inline-block;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  transform: translateY(0.11em);
+}
+.katex .m root .sqrt-line::before {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.04em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .m root .sqrt-line::after {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-top: -0.04em;
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+}
+.katex .m root > span > span {
+  display: inline-block;
+  text-align: left;
+}
+.katex .m root > span > span > span {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+.katex .m root > span > span > span > span {
+  display: inline-block;
+  position: absolute;
+  top: -0.5em;
+  left: 0;
+}
+.katex .m root > span > span > span::after {
+  content: "";
+  display: inline-block;
+  width: 0.45em;
+  height: 0.4em;
+  border-left: 0.04em solid;
+  border-bottom: 0.04em solid;
+  border-bottom-left-radius: 100%;
+}
+.katex .m root > span {
+  padding-left: 0.7em;
+}
+.katex .m root > span::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-right: 0.6em solid;
+  border-top: 0.6em solid transparent;
+  border-bottom: 0.6em solid transparent;
+  transform: translateY(-0.1em);
+}
+.katex-display {
+  display: block;
+  margin: 1em 0;
+  text-align: center;
+}
+.katex-display > .katex {
+  display: block;
+  text-align: center;
+  white-space: nowrap;
+}
+.katex-display > .katex > .katex-html {
+  display: block;
+  position: relative;
+}
+.katex-display > .katex > .katex-html > .katex-mathml {
+  display: block;
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
+.katex .katex-inline-display {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  margin: 0.25em 0;
+}
+.katex .katex-inline-display > .katex {
+  display: block;
+  text-align: center;
+  white-space: nowrap;
+}
+.katex .katex-inline-display > .katex > .katex-html {
+  display: block;
+  position: relative;
+}
+.katex .katex-inline-display > .katex > .katex-html > .katex-mathml {
+  display: block;
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
+.katex .base {
+  display: inline-block;
+}
+.katex .strut {
+  display: inline-block;
+}
+.katex .fontsize-ensurer {
+  display: inline-block;
+}
+.katex .size1, .katex .size1 + .fontsize-ensurer {
+  font-size: 1em;
+}
+.katex .size2, .katex .size2 + .fontsize-ensurer {
+  font-size: 1.1em;
+}
+.katex .size3, .katex .size3 + .fontsize-ensurer {
+  font-size: 1.3em;
+}
+.katex .size4, .katex .size4 + .fontsize-ensurer {
+  font-size: 1.5em;
+}
+.katex .size5, .katex .size5 + .fontsize-ensurer {
+  font-size: 1.7em;
+}
+.katex .size6, .katex .size6 + .fontsize-ensurer {
+  font-size: 2em;
+}
+.katex .size7, .katex .size7 + .fontsize-ensurer {
+  font-size: 2.5em;
+}
+.katex .size8, .katex .size8 + .fontsize-ensurer {
+  font-size: 3em;
+}
+.katex .size9, .katex .size9 + .fontsize-ensurer {
+  font-size: 3.5em;
+}
+.katex .size10, .katex .size10 + .fontsize-ensurer {
+  font-size: 4.5em;
+}
+.katex .size11, .katex .size11 + .fontsize-ensurer {
+  font-size: 6em;
+}
+.katex .size12, .katex .size12 + .fontsize-ensurer {
+  font-size: 7.5em;
+}
+.katex .mord {
+  font-family: KaTeX_Main;
+}
+.katex .mopent {
+  font-family: KaTeX_Main;
+}
+.katex .mbin {
+  font-family: KaTeX_Main;
+}
+.katex .mrel {
+  font-family: KaTeX_Main;
+}
+.katex .mopen {
+  font-family: KaTeX_Main;
+}
+.katex .mclose {
+  font-family: KaTeX_Main;
+}
+.katex .mpunct {
+  font-family: KaTeX_Main;
+}
+.katex .minner {
+  font-family: KaTeX_Main;
+}
+.katex .m frac span {
+  text-align: center;
+}
+.katex .m frac-line {
+  width: 100%;
+}
+.katex .m frac-line::before {
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  content: "";
+  display: block;
+  margin-top: -0.0251em;
+  width: 100%;
+}
+.katex .m frac-line::after {
+  border-bottom-style: solid;
+  border-bottom-width: 0.035em;
+  content: "";
+  display: block;
+  margin-top: -0.0251em;
+  width: 100%;
+}
+.katex .m frac-line span::after {
+  content: "\200B";
+  display: inline-block;
+  width: 0;
+}
+.katex .m frac-line span > span {
+  text-align: center;
+}
+.katex .m overline .overline-line {
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  content: "";
+  display: block;
+  margin-top: -0.0252em;
+  width: 100%;
+}
+.katex .m overline .overline-line::before {
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  content: "";
+  display: block;
+  margin-bottom: 0.3em;
+  width: 100%;
+}
+.katex .m overline .overline-line::after {
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  content: "";
+  display: block;
+  margin-bottom: 0.3em;
+  width: 100%;
+}
+.katex .m underline .underline-line {
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  content: "";
+  display: block;
+  margin-top: -0.0255em;
+  width: 100%;
+}
+.katex .m underline .underline-line::before {
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  content: "";
+  display: block;
+  width: 100%;
+}
+.katex .m underline .underline-line::after {
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  content: "";
+  display: block;
+  width: 100%;
+}
+.katex .m sqrt > .sqrt-line {
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  content: "";
+  display: block;
+  margin-top: -0.0441em;
+  width: 100%;
+}
+.katex .m sqrt > .sqrt-line::before {
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  content: "";
+  display: block;
+  margin-bottom: -0.0351em;
+  width: 100%;
+}
+.katex .m sqrt > .sqrt-line::after {
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  content: "";
+  display: block;
+  margin-bottom: -0.0351em;
+  width: 100%;
+}
+.katex .m delimiter {
+  font-family: KaTeX_Size2;
+}
+.katex .m穷竭符 {
+  font-family: KaTeX_Size3;
+}
+.katex .m穷竭符 .vlist-t {
+  border-collapse: collapse;
+}
+.katex .m穷竭符 .vlist-t .vlist-r {
+  border-bottom: 0;
+  display: inline-block;
+  vertical-align: baseline;
+}
+.katex .m穷竭符 .vlist-t .vlist-s {
+  display: inline-block;
+  height: 100%;
+  vertical-align: baseline;
+  width: 0;
+}
+.katex .m穷竭符 .vlist-t .vlist-t2 {
+  display: inline-block;
+  position: relative;
+  vertical-align: baseline;
+}
+.katex .m穷竭符 .mop .ldots {
+  height: 0.6em;
+  vertical-align: 0;
+}
+.katex .m穷竭符 .mop .vdots {
+  height: 1.6em;
+  vertical-align: 0;
+}
+.katex .m穷竭符 .mop .ddots {
+  height: 1.8em;
+  vertical-align: 0;
+}
+.katex .m穷竭符 .vlist-t {
+  display: inline-table;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.katex .m穷竭符 .vlist-r {
+  display: table-row;
+}
+.katex .m穷竭符 .vlist-t {
+  display: table-row;
+  position: relative;
+  vertical-align: baseline;
+}
+.katex .m穷竭符 .vlist-t .vlist-s {
+  display: table-cell;
+  position: absolute;
+  width: 100%;
+  vertical-align: baseline;
+}
+.katex .m穷竭符 .vlist-r {
+  display: table-row;
+  height: 100%;
+}
+.katex .m穷竭符 .vlist-t .vlist-s {
+  display: inline-block;
+  height: 100%;
+  vertical-align: baseline;
+  width: 0;
+}
+.katex .m穷竭符 .vlist-t2 {
+  display: inline-table;
+  position: relative;
+  vertical-align: baseline;
+}
+.katex .m穷竭符 .vlist-s::after, .katex .m穷竭符 .vlist-r::after {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: baseline;
+}
+.katex .m op-limits .vlist-t {
+  text-align: center;
+}
+.katex .m op-limits .vlist-s {
+  display: inline-block;
+  height: 100%;
+  vertical-align: baseline;
+  width: 0;
+}
+.katex .m op-limits .vlist-r {
+  display: inline-block;
+  height: 100%;
+  vertical-align: baseline;
+  width: 0;
+}
+.katex .m op-limits .vlist-s::after, .katex .m op-limits .vlist-r::after {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: baseline;
+  width: 0;
+}
+.katex .m accent {
+  position: relative;
+}
+.katex .m accent-body {
+  position: relative;
+}
+.katex .m accent-body::after {
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  content: "";
+  display: block;
+  width: 100%;
+}
+.katex .m accent-stretch {
+  display: inline-block;
+  position: relative;
+  width: 0;
+}
+.katex .m accent-stretch::after {
+  border-bottom-style: solid;
+  border-bottom-width: 0.04em;
+  content: "";
+  display: block;
+  width: 100%;
+  margin-left: -100%;
+  margin-right: -100%;
+  margin-top: -0.04em;
+}
+.katex .m vertical-separator {
+  display: inline-block;
+  min-height: 1em;
+  min-width: 1ex;
+}
+.katex .m vertical-separator::before {
+  content: "";
+  display: block;
+  width: 0;
+  border-right-width: 0.04em;
+  border-right-style: solid;
+  margin-right: 0.4em;
+}
+.katex .m hl-self {
+  position: relative;
+  background: linear-gradient(to bottom, transparent 60%, #b3d4fc 60%, #b3d4fc 80%, transparent 80%);
+}
+.katex .m hl-self::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 0.4em;
+  bottom: 0;
+  left: 0;
+  background: #b3d4fc;
+  opacity: 0.4;
+}
+.katex .katex-mathml {
+  background: #fff;
+  clip: rect(1px, 1px, 1px, 1px);
+  color: transparent;
+  direction: ltr;
+  display: block;
+  font-size: 0;
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+.katex .katex-mathml + .katex-html {
+  display: block;
+  text-indent: 0;
+}
+.katex .katex-html {
+  display: inline-block;
+  text-indent: 0;
+  white-space: nowrap;
+}
+.katex .katex-html > .base {
+  display: inline-block;
+  text-align: left;
+}
+.katex .katex-html > .mirror {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+.katex .katex-html > .mirror .mtable .vertical-separator {
+  display: inline-table;
+  min-height: 1px;
+  width: 0;
+}
+.katex .katex-html > .mirror .mtable .arraycolsep {
+  display: inline-table-cell;
+  width: 0;
+}
+.katex .katex-html > .mirror .mtable .col-align-c > .vlist-t {
+  text-align: center;
+}
+.katex .katex-html > .mirror .mtable .col-align-l > .vlist-t {
+  text-align: left;
+}
+.katex .katex-html > .mirror .mtable .col-align-r > .vlist-t {
+  text-align: right;
+}
+.katex .katex {
+  color: #000;
+  font: normal 1.1em KaTeX_Main, Times New Roman, serif;
+  line-height: 1.2;
+  text-rendering: auto;
+}
+.katex .katex * {
+  -webkit-font-smoothing: antialiased;
+}
+.katex .katex .katex-mathml {
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+.katex .katex .katex-mathml + .katex-html {
+  display: block;
+  text-indent: 0;
+}
+.katex .katex .katex-html {
+  display: inline-block;
+  text-indent: 0;
+  white-space: nowrap;
+}
+.katex .katex .katex-html > .base {
+  display: inline-block;
+  text-align: left;
+}
+.katex .katex .katex-html > .mirror {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+.katex .katex .katex-html > .mirror .mtable .vertical-separator {
+  display: inline-table;
+  min-height: 1px;
+  width: 0;
+}
+.katex .katex .katex-html > .mirror .mtable .arraycolsep {
+  display: inline-table-cell;
+  width: 0;
+}
+.katex .katex .katex-html > .mirror .mtable .col-align-c > .vlist-t {
+  text-align: center;
+}
+.katex .katex .katex-html > .mirror .mtable .col-align-l > .vlist-t {
+  text-align: left;
+}
+.katex .katex .katex-html > .mirror .mtable .col-align-r > .vlist-t {
+  text-align: right;
+}
+:root .katex .katex-mathml {
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+:root .katex .katex-mathml + .katex-html {
+  display: block;
+  text-indent: 0;
+}
+:root .katex .katex-html {
+  display: inline-block;
+  text-indent: 0;
+  white-space: nowrap;
+}
+:root .katex .katex-html > .base {
+  display: inline-block;
+  text-align: left;
+}
+:root .katex .katex-html > .mirror {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+:root .katex .katex-html > .mirror .mtable .vertical-separator {
+  display: inline-table;
+  min-height: 1px;
+  width: 0;
+}
+:root .katex .katex-html > .mirror .mtable .arraycolsep {
+  display: inline-table-cell;
+  width: 0;
+}
+:root .katex .katex-html > .mirror .mtable .col-align-c > .vlist-t {
+  text-align: center;
+}
+:root .katex .katex-html > .mirror .mtable .col-align-l > .vlist-t {
+  text-align: left;
+}
+:root .katex .katex-html > .mirror .mtable .col-align-r > .vlist-t {
+  text-align: right;
+}
 
 @custom-variant dark (&:is(.dark *));
 
