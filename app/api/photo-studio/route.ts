@@ -68,11 +68,10 @@ export async function POST(request: NextRequest) {
               role: "user",
               content: [
                 { type: "text", text: prompt },
-                { type: "image_url", image_url: { url: dataUrl } },
-              ],
-            },
-          ],
-          stream: false,
+                { type: "image_url", image_url: { url: dataUrl } }
+              ]
+            }
+          ]
         }),
       }
     );
