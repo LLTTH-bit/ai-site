@@ -31,7 +31,7 @@ export default async function UsersPage() {
     orderBy: { createdAt: "desc" },
     include: {
       _count: {
-        select: { conversations: true, usageLogs: true },
+        select: { conversations: { where: { messages: { some: {} } } }, usageLogs: true },
       },
       usageLogs: {
         select: { model: true, totalTokens: true },
