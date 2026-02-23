@@ -97,8 +97,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "API配置错误，请联系管理员" }, { status: 500 });
     }
 
-    let response;
-    let responseText;
+    let response: Response;
+    let responseText = "";
     let attempts = 0;
     const maxAttempts = 3;
 
