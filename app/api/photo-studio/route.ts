@@ -90,36 +90,59 @@ export async function POST(request: NextRequest) {
 
     const prompt = gender === "male" ? malePrompt : femalePrompt;
 
-    // 调用豆包图像生成API
+    // 调用豆包图像生成API（带重试机制）
     const apiKey = process.env.DOUBAO_API_KEY;
 
     if (!apiKey) {
       return NextResponse.json({ error: "API配置错误，请联系管理员" }, { status: 500 });
     }
 
-    const response = await fetch(
-      "https://ark.cn-beijing.volces.com/api/v3/images/generations",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          "model": "doubao-seedream-4-5-251128",
-          "prompt": prompt,
-          "image_url": fullImageUrl,
-          "size": "2048x2048"
-        }),
-      }
-    );
+    let response;
+    let responseText;
+    let attempts = 0;
+    const maxAttempts = 3;
 
-    const responseText = await response.text();
-    console.log("API response status:", response.status);
-    console.log("API response text:", responseText.substring(0, 500));
+    while (attempts < maxAttempts) {
+      attempts++;
+      console.log(`API attempt ${attempts}/${maxAttempts}`);
+
+      response = await fetch(
+        "https://ark.cn-beijing.volces.com/api/v3/images/generations",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            "model": "doubao-seedream-4-5-251128",
+            "prompt": prompt,
+            "image_url": fullImageUrl,
+            "size": "2048x2048"
+          }),
+        }
+      );
+
+      responseText = await response.text();
+      console.log("API response status:", response.status);
+
+      if (response.ok) {
+        break;
+      }
+
+      console.error(`API error (attempt ${attempts}):`, responseText.substring(0, 200));
+
+      // 如果是服务器错误，等待后重试
+      if (response.status >= 500) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        continue;
+      }
+
+      // 客户端错误不重试
+      break;
+    }
 
     if (!response.ok) {
-      console.error("API error:", responseText);
       return NextResponse.json({ error: `图像生成失败: ${responseText}` }, { status: 500 });
     }
 
