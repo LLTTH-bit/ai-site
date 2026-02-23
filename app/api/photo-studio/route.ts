@@ -35,10 +35,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "请选择性别" }, { status: 400 });
     }
 
-    // 直接保存图片到服务器
+    // 直接保存图片到服务器 - 使用nginx默认目录
     const ext = image.name.split(".").pop() || "jpg";
     const filename = `${randomUUID()}.${ext}`;
-    const uploadDir = join(process.cwd(), "public", "photos");
+    const uploadDir = "/var/www/html/photos";
 
     await mkdir(uploadDir, { recursive: true });
 
