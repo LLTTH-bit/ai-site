@@ -583,124 +583,149 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
         </div>
       </div>
 
-      {/* 输入区域 */}
-      <div className="border-t border-border p-4">
-        {/* 模型选择器和深度思考开关 */}
-        <div className="max-w-3xl mx-auto mb-3 flex items-center gap-3">
-          <div className="relative inline-block">
-            <button
-              onClick={() => setShowModelList(!showModelList)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${
-                isDark
-                  ? "bg-[#2f2f2f] text-gray-300 hover:bg-[#3f3f3f]"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              } transition-colors`}
-            >
-              <span>{availableModels.find(m => m.id === selectedModel)?.name || selectedModel}</span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${showModelList ? "rotate-180" : ""}`} />
-            </button>
-
-            {showModelList && (
-              <div
-                onMouseLeave={() => setShowModelList(false)}
-                className={`absolute bottom-full mb-2 left-0 w-56 rounded-lg shadow-lg border overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200 origin-bottom-left ${
-                  isDark ? "bg-[#2f2f2f] border-gray-700" : "bg-white border-gray-200"
-                }`}>
-                {availableModels.map((model) => (
-                  <button
-                    key={model.id}
-                    onClick={() => {
-                      setSelectedModel(model.id);
-                      // 切换模型时重置深度思考状态
-                      if (model.supportsThinking) {
-                        setThinkingEnabled(model.defaultThinking || false);
-                      } else {
-                        setThinkingEnabled(false);
-                      }
-                      setShowModelList(false);
-                    }}
-                    className={`w-full px-3 py-2 text-left text-sm flex items-center justify-between hover:bg-opacity-50 ${
-                      selectedModel === model.id
-                        ? isDark ? "bg-blue-500/20 text-blue-400" : "bg-blue-50 text-blue-600"
-                        : isDark ? "text-gray-300 hover:bg-[#3f3f3f]" : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <span>{model.name}</span>
-                    <div className="flex items-center gap-1">
-                      {model.supportsThinking && (
-                        <span className="text-[10px] px-1 py-0.5 bg-purple-500/20 text-purple-400 rounded">D</span>
-                      )}
-                      <span className="text-xs opacity-60">{model.provider}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* 深度思考开关 - 仅在支持的模型时显示 */}
-          {supportsThinking && (
-            <button
-              onClick={() => setThinkingEnabled(!thinkingEnabled)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                thinkingEnabled
-                  ? "bg-purple-500/20 text-purple-400"
-                  : isDark
-                    ? "bg-[#2f2f2f] text-gray-400 hover:bg-[#3f3f3f]"
-                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-              }`}
-              title={thinkingEnabled ? "关闭深度思考" : "开启深度思考"}
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                <path d="M2 17l10 5 10-5" />
-                <path d="M2 12l10 5 10-5" />
-              </svg>
-              <span>深度思考</span>
-            </button>
-          )}
-        </div>
-
+      {/* 输入区域 - Claude风格悬浮输入框 */}
+      <div className="pb-6 px-4">
         <div className="max-w-3xl mx-auto">
-          <div className="relative">
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={isCurrentlyTyping() ? "AI 正在回复中..." : "发送消息..."}
-              className={`w-full px-4 py-3 rounded-2xl resize-none focus:outline-none transition-colors ${
-                isDark
-                  ? "bg-[#2f2f2f] text-white placeholder-gray-500 focus:ring-1 focus:ring-blue-500"
-                  : "bg-gray-100 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
-              }`}
-              rows={2}
-              disabled={loading || isCurrentlyTyping()}
-              style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 400 }}
-            />
-            {isCurrentlyTyping() ? (
-              <button
-                onClick={() => { isPausedRef.current = true; }}
-                className="absolute right-3 bottom-3 p-2 rounded-xl bg-red-500 text-white hover:opacity-90 transition-all cursor-pointer"
-                title="停止回复"
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M6 6h12v12H6z"/>
-                </svg>
-              </button>
-            ) : (
-              <button
-                onClick={sendMessage}
-                disabled={loading || isCurrentlyTyping() || !input.trim()}
-                className={`absolute right-3 bottom-3 p-2 rounded-xl bg-blue-500 text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                </svg>
-              </button>
-            )}
+          {/* 悬浮输入框容器 */}
+          <div
+            className={`relative rounded-2xl shadow-lg border transition-colors ${
+              isDark
+                ? "bg-[#2f2f2f] border-gray-700/50"
+                : "bg-white border-gray-200"
+            }`}
+            style={{
+              boxShadow: isDark
+                ? "0 4px 20px rgba(0, 0, 0, 0.4)"
+                : "0 4px 20px rgba(0, 0, 0, 0.1)"
+            }}
+          >
+            {/* 顶部工具栏：模型选择和深度思考 */}
+            <div className="flex items-center justify-between px-3 py-2 border-b border-transparent">
+              {/* 左侧：模型选择 */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowModelList(!showModelList)}
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs transition-colors ${
+                    isDark
+                      ? "hover:bg-gray-700 text-gray-400"
+                      : "hover:bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  <span className="font-medium">{availableModels.find(m => m.id === selectedModel)?.name || selectedModel}</span>
+                  <ChevronDown className={`w-3 h-3 transition-transform ${showModelList ? "rotate-180" : ""}`} />
+                </button>
+
+                {showModelList && (
+                  <div
+                    onMouseLeave={() => setShowModelList(false)}
+                    className={`absolute bottom-full mb-2 left-0 w-56 rounded-lg shadow-lg border overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-200 origin-bottom-left ${
+                      isDark ? "bg-[#2f2f2f] border-gray-700" : "bg-white border-gray-200"
+                    }`}>
+                    {availableModels.map((model) => (
+                      <button
+                        key={model.id}
+                        onClick={() => {
+                          setSelectedModel(model.id);
+                          if (model.supportsThinking) {
+                            setThinkingEnabled(model.defaultThinking || false);
+                          } else {
+                            setThinkingEnabled(false);
+                          }
+                          setShowModelList(false);
+                        }}
+                        className={`w-full px-3 py-2 text-left text-sm flex items-center justify-between transition-colors ${
+                          selectedModel === model.id
+                            ? isDark ? "bg-blue-500/20 text-blue-400" : "bg-blue-50 text-blue-600"
+                            : isDark ? "text-gray-300 hover:bg-gray-700" : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                      >
+                        <span>{model.name}</span>
+                        <div className="flex items-center gap-1">
+                          {model.supportsThinking && (
+                            <span className="text-[10px] px-1 py-0.5 bg-purple-500/20 text-purple-400 rounded">D</span>
+                          )}
+                          <span className="text-xs opacity-60">{model.provider}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 右侧：深度思考开关 */}
+              {supportsThinking && (
+                <button
+                  onClick={() => setThinkingEnabled(!thinkingEnabled)}
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs transition-colors ${
+                    thinkingEnabled
+                      ? "bg-purple-500/20 text-purple-400"
+                      : isDark
+                        ? "hover:bg-gray-700 text-gray-400"
+                        : "hover:bg-gray-100 text-gray-600"
+                  }`}
+                  title={thinkingEnabled ? "关闭深度思考" : "开启深度思考"}
+                >
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    <path d="M2 17l10 5 10-5" />
+                    <path d="M2 12l10 5 10-5" />
+                  </svg>
+                  <span>思考</span>
+                </button>
+              )}
+            </div>
+
+            {/* 文本输入框 */}
+            <div className="relative">
+              <textarea
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={isCurrentlyTyping() ? "AI 正在回复中..." : "发送消息..."}
+                className={`w-full px-4 py-3 bg-transparent resize-none focus:outline-none transition-colors ${
+                  isDark
+                    ? "text-white placeholder-gray-500"
+                    : "text-gray-900 placeholder-gray-400"
+                }`}
+                rows={2}
+                disabled={loading || isCurrentlyTyping()}
+                style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 400 }}
+              />
+
+              {/* 发送按钮 */}
+              {isCurrentlyTyping() ? (
+                <button
+                  onClick={() => { isPausedRef.current = true; }}
+                  className="absolute right-3 bottom-3 p-2 rounded-lg bg-red-500 text-white hover:opacity-90 transition-all cursor-pointer"
+                  title="停止回复"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 6h12v12H6z"/>
+                  </svg>
+                </button>
+              ) : (
+                <button
+                  onClick={sendMessage}
+                  disabled={loading || isCurrentlyTyping() || !input.trim()}
+                  className={`absolute right-3 bottom-3 p-2 rounded-lg transition-all ${
+                    input.trim() && !loading && !isCurrentlyTyping()
+                      ? "bg-blue-500 text-white hover:opacity-90 cursor-pointer"
+                      : isDark
+                        ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                        : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  }`}
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                  </svg>
+                </button>
+              )}
+            </div>
           </div>
-          <div className={`text-center text-xs mt-2 ${isDark ? "text-gray-500" : "text-gray-400"}`}>
+
+          {/* 底部提示 */}
+          <div className={`text-center text-xs mt-3 ${isDark ? "text-gray-500" : "text-gray-400"}`}>
             AI 可能会产生错误信息，请核实重要内容
           </div>
         </div>
