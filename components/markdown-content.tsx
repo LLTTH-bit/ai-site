@@ -3,7 +3,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Copy, Check } from "lucide-react";
 import katex from "katex";
-import "katex/dist/katex.min.css";
 
 interface CodeBlockProps {
   children?: React.ReactNode;
