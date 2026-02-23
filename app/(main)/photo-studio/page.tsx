@@ -24,6 +24,11 @@ export default function PhotoStudioPage() {
         setError("请选择图片文件");
         return;
       }
+      // 限制文件大小为 10MB
+      if (file.size > 10 * 1024 * 1024) {
+        setError("图片大小不能超过 10MB");
+        return;
+      }
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
       setResultImage(null);
@@ -154,11 +159,13 @@ export default function PhotoStudioPage() {
 
             {previewUrl ? (
               <div className="relative">
-                <img
-                  src={previewUrl}
-                  alt="预览"
-                  className="max-w-md w-full rounded-lg"
-                />
+                <div className="max-h-64 overflow-y-auto rounded-lg border border-gray-600">
+                  <img
+                    src={previewUrl}
+                    alt="预览"
+                    className="w-full h-auto rounded-lg"
+                  />
+                </div>
                 <button
                   onClick={handleUploadClick}
                   className={`mt-3 px-4 py-2 rounded-lg transition-colors ${
