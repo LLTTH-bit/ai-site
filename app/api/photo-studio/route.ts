@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          "model": "Qwen/Qwen-Image-Edit-2509",
+          "model": "Qwen/Qwen-Image-Edit",
           "prompt": prompt,
           "image_size": "1024x1024"
         }),
