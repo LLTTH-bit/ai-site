@@ -2,10 +2,9 @@
 
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useTheme } from "next-themes";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { Sun, Moon, Send, Bot, Pencil, ChevronDown } from "lucide-react";
 import { availableModels, defaultModel } from "@/lib/models";
+import { MarkdownContent } from "@/components/markdown-content";
 
 // 打字机效果组件
 function TypewriterText() {
@@ -551,31 +550,30 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
 
                   {/* 消息内容 */}
                   <div className={`flex-1 min-w-0 ${msg.role === "user" ? "text-right" : ""}`}>
-                    <div
-                      className={`inline-block max-w-[80%] px-4 py-3 rounded-2xl ${
-                        msg.role === "user"
-                          ? msg.paused
+                    {msg.role === "user" ? (
+                      /* 用户消息：保持气泡样式 */
+                      <div
+                        className={`inline-block max-w-[80%] px-4 py-3 rounded-2xl ${
+                          msg.paused
                             ? "bg-gray-400 text-gray-200 line-through opacity-60"
                             : "bg-blue-500 text-white"
-                          : isDark
-                            ? "bg-[#2f2f2f] text-gray-100"
-                            : "bg-gray-100 text-gray-900"
-                      }`}
-                      style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 400 }}
-                    >
-                      {msg.role === "assistant" ? (
-                        <div className={isDark ? "prose prose-invert max-w-none" : "prose max-w-none"}>
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {content}
-                          </ReactMarkdown>
-                          {isTypingNow && (
-                            <span className={`inline-block w-0.5 h-4 ${isDark ? "bg-gray-400" : "bg-gray-600"} animate-pulse ml-0.5`} />
-                          )}
-                        </div>
-                      ) : (
+                        }`}
+                        style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 400 }}
+                      >
                         <div className="whitespace-pre-wrap">{content}</div>
-                      )}
-                    </div>
+                      </div>
+                    ) : (
+                      /* AI消息：直接显示在背景中 */
+                      <div
+                        className="w-full"
+                        style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 400 }}
+                      >
+                        <MarkdownContent content={content} isDark={isDark} />
+                        {isTypingNow && (
+                          <span className={`inline-block w-0.5 h-4 ${isDark ? "bg-gray-400" : "bg-gray-600"} animate-pulse ml-0.5`} />
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               );
