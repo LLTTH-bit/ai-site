@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "API配置错误，请联系管理员" }, { status: 500 });
     }
 
-    let response: Response;
+    let response: Response | null = null;
     let responseText = "";
     let attempts = 0;
     const maxAttempts = 3;
@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
       break;
     }
 
-    if (!response.ok) {
+    if (!response || !response.ok) {
       return NextResponse.json({ error: `图像生成失败: ${responseText}` }, { status: 500 });
     }
 
