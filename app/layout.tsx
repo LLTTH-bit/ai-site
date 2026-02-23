@@ -60,7 +60,6 @@ export default function RootLayout({
           defaultTheme="light"
           enableSystem={false}
           disableTransitionOnChange
-          enableTransitionOnChange={false}
         >
           {children}
         </ThemeProvider>
