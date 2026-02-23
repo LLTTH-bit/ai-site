@@ -32,14 +32,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "请选择性别" }, { status: 400 });
     }
 
-    // 将图片转换为base64
-    const arrayBuffer = await image.arrayBuffer();
-    const base64Image = Buffer.from(arrayBuffer).toString("base64");
-    const mimeType = image.type || "image/jpeg";
-    const dataUrl = `data:${mimeType};base64,${base64Image}`;
+    // 先上传图片到服务器
+    const uploadFormData = new FormData();
+    uploadFormData.append("image", image);
 
-    console.log("Image size:", image.size);
-    console.log("Base64 length:", base64Image.length);
+    const uploadResponse = await fetch(new URL("/api/upload", request.url), {
+      method: "POST",
+      body: uploadFormData,
+    });
+
+    if (!uploadResponse.ok) {
+      const errorData = await uploadResponse.json();
+      return NextResponse.json({ error: `图片上传失败: ${errorData.error}` }, { status: 500 });
+    }
+
+    const { url: imageUrl } = await uploadResponse.json();
+    const fullImageUrl = `${request.headers.get("origin")}${imageUrl}`;
+
+    console.log("Uploaded image URL:", fullImageUrl);
 
     // 根据性别选择提示词
     const malePrompt = `Convert the uploaded portrait into an American-style professional headshot in corporate photography style, while preserving the original person's facial features and identity. Requirements: half-body portrait, blue textured studio background, soft natural studio lighting, high-definition clarity, realistic skin tones, clean and elegant composition. The person should wear business casual shirt, minimalist and elegant design, modern and professional style, paired with simple tie. Expression should be relaxed, confident, and natural with bright, engaging eyes and a genuine smile. Keep sharp focus on the face, with a slightly blurred background for depth. overall polished and professional.`;
@@ -66,7 +76,7 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           "model": "doubao-seedream-4-5-251128",
           "prompt": prompt,
-          "image": dataUrl,
+          "image": fullImageUrl,
           "size": "2048x2048"
         }),
       }
