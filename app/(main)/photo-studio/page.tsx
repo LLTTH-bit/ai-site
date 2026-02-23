@@ -87,11 +87,12 @@ export default function PhotoStudioPage() {
 
   return (
     <div
-      className={`min-h-screen ${
+      className={`min-h-screen overflow-y-auto ${
         isDark ? "bg-[#171717]" : "bg-gray-50"
       }`}
+      style={{ maxHeight: "100vh" }}
     >
-      <div className="max-w-4xl mx-auto p-8">
+      <div className="max-w-2xl mx-auto p-6 pb-20">
         <h1
           className={`text-3xl font-bold mb-2 ${
             isDark ? "text-white" : "text-gray-900"
@@ -159,11 +160,11 @@ export default function PhotoStudioPage() {
 
             {previewUrl ? (
               <div className="relative">
-                <div className="max-h-64 overflow-y-auto rounded-lg border border-gray-600">
+                <div className="max-h-48 overflow-y-auto rounded-lg border border-gray-600">
                   <img
                     src={previewUrl}
                     alt="预览"
-                    className="w-full h-auto rounded-lg"
+                    className="w-full h-auto rounded-lg object-contain"
                   />
                 </div>
                 <button
