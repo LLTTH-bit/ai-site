@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
-import { writeFile, mkdir } from "fs/promises";
+import { writeFile, mkdir, unlink } from "fs/promises";
 import { join } from "path";
 import { randomUUID } from "crypto";
 
@@ -45,6 +45,36 @@ export async function POST(request: NextRequest) {
     const buffer = await image.arrayBuffer();
     const filepath = join(uploadDir, filename);
     await writeFile(filepath, Buffer.from(buffer));
+
+    // 保存上传记录到数据库
+    await prisma.uploadedFile.create({
+      data: {
+        userId: user.id,
+        filename: filename,
+        originalName: image.name,
+        fileSize: image.size,
+        mimeType: image.type || "image/jpeg",
+      },
+    });
+
+    // 限制每个用户最多10张照片，删除最老的
+    const userFiles = await prisma.uploadedFile.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "asc" },
+      take: 100,
+    });
+
+    if (userFiles.length > 10) {
+      const filesToDelete = userFiles.slice(0, userFiles.length - 10);
+      for (const file of filesToDelete) {
+        try {
+          await unlink(join(uploadDir, file.filename));
+          await prisma.uploadedFile.delete({ where: { id: file.id } });
+        } catch (e) {
+          console.error("Delete file error:", e);
+        }
+      }
+    }
 
     // 获取服务器地址
     const host = request.headers.get("host") || "localhost:3000";

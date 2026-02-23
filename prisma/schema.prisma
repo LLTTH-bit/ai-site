@@ -22,6 +22,7 @@ model User {
   conversations Conversation[]
   usageLogs     ApiUsageLog[]
   auditLogs     AdminAuditLog[]
+  uploadedFiles UploadedFile[]
 
   @@map("users")
 }
@@ -102,4 +103,21 @@ model AdminAuditLog {
   @@index([adminId, createdAt])
   @@index([createdAt])
   @@map("admin_audit_logs")
+}
+
+// ============ 上传文件记录表 ============
+model UploadedFile {
+  id          String   @id @default(cuid())
+  userId      String
+  filename    String
+  originalName String
+  fileSize    Int
+  mimeType    String?
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([createdAt])
+  @@map("uploaded_files")
 }

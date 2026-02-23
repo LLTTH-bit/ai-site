@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
-import { LayoutDashboard, Users, KeyRound, BarChart3, MessageSquare, LogOut, MessageCircle } from "lucide-react";
+import { LayoutDashboard, Users, KeyRound, BarChart3, MessageSquare, LogOut, MessageCircle, FolderOpen } from "lucide-react";
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const session = await getSession();
@@ -20,6 +20,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     { href: "/admin/users", label: "用户管理", icon: Users },
     { href: "/admin/conversations", label: "对话管理", icon: MessageCircle },
     { href: "/admin/usage", label: "用量统计", icon: BarChart3 },
+    { href: "/admin/files", label: "文件管理", icon: FolderOpen },
   ];
 
   return (
