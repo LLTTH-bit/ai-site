@@ -46,8 +46,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: `图片上传失败: ${errorData.error}` }, { status: 500 });
     }
 
-    const { url: imageUrl } = await uploadResponse.json();
-    const fullImageUrl = `${request.headers.get("origin")}${imageUrl}`;
+    const { url: uploadedUrl } = await uploadResponse.json();
+    const fullImageUrl = `${request.headers.get("origin")}${uploadedUrl}`;
 
     console.log("Uploaded image URL:", fullImageUrl);
 
@@ -107,9 +107,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "未获取到生成的图像" }, { status: 500 });
     }
 
-    const imageUrl = data[0].url;
+    const generatedImageUrl = data[0].url;
 
-    return NextResponse.json({ image: imageUrl });
+    return NextResponse.json({ image: generatedImageUrl });
   } catch (error) {
     console.error("Photo studio error:", error);
     return NextResponse.json(
