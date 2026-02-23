@@ -47,6 +47,7 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
         conversations={conversations}
         isAdmin={isAdmin}
         email={session.email}
+        nickname={user.name}
       />
 
       {/* 主内容区 */}

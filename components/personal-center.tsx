@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, User, MessageSquare, Zap, ChevronDown, ChevronUp } from "lucide-react";
+import { X, User, MessageSquare, Zap, ChevronDown, ChevronUp, Pencil, Check } from "lucide-react";
 
 interface UserStats {
   user: {
@@ -29,12 +29,16 @@ interface UserStats {
 interface PersonalCenterProps {
   isOpen: boolean;
   onClose: () => void;
+  onNicknameChange?: (nickname: string) => void;
 }
 
-export default function PersonalCenter({ isOpen, onClose }: PersonalCenterProps) {
+export default function PersonalCenter({ isOpen, onClose, onNicknameChange }: PersonalCenterProps) {
   const [stats, setStats] = useState<UserStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [modelExpanded, setModelExpanded] = useState(false);
+  const [isEditingNickname, setIsEditingNickname] = useState(false);
+  const [nickname, setNickname] = useState("");
+  const [savingNickname, setSavingNickname] = useState(false);
 
   useEffect(() => {
     if (isOpen && !stats) {
@@ -49,11 +53,38 @@ export default function PersonalCenter({ isOpen, onClose }: PersonalCenterProps)
       if (res.ok) {
         const data = await res.json();
         setStats(data);
+        setNickname(data.user.name || "");
       }
     } catch (error) {
       console.error("获取用户统计失败:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const saveNickname = async () => {
+    if (!nickname.trim() && nickname !== "") {
+      return;
+    }
+    setSavingNickname(true);
+    try {
+      const res = await fetch("/api/user/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: nickname.trim() }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setStats((prev) => prev ? { ...prev, user: { ...prev.user, name: nickname.trim() || null } } : null);
+        if (onNicknameChange) {
+          onNicknameChange(nickname.trim());
+        }
+        setIsEditingNickname(false);
+      }
+    } catch (error) {
+      console.error("保存昵称失败:", error);
+    } finally {
+      setSavingNickname(false);
     }
   };
 
@@ -94,10 +125,41 @@ export default function PersonalCenter({ isOpen, onClose }: PersonalCenterProps)
                   <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center">
                     <User className="w-6 h-6 text-white" />
                   </div>
-                  <div>
-                    <p className="font-medium text-slate-800 dark:text-white">
-                      {stats.user.name || "未设置昵称"}
-                    </p>
+                  <div className="flex-1">
+                    {isEditingNickname ? (
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={nickname}
+                          onChange={(e) => setNickname(e.target.value)}
+                          placeholder="输入昵称"
+                          className="flex-1 px-2 py-1 text-sm border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          autoFocus
+                        />
+                        <button
+                          onClick={saveNickname}
+                          disabled={savingNickname}
+                          className="p-1 text-green-500 hover:bg-green-50 rounded disabled:opacity-50"
+                        >
+                          <Check className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-slate-800 dark:text-white">
+                          {stats.user.name || "未设置昵称"}
+                        </p>
+                        <button
+                          onClick={() => {
+                            setNickname(stats.user.name || "");
+                            setIsEditingNickname(true);
+                          }}
+                          className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded"
+                        >
+                          <Pencil className="w-3 h-3" />
+                        </button>
+                      </div>
+                    )}
                     <p className="text-sm text-slate-500">{stats.user.email}</p>
                   </div>
                 </div>

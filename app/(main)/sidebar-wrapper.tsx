@@ -20,13 +20,15 @@ interface SidebarWrapperProps {
   conversations: Conversation[];
   isAdmin: boolean;
   email: string;
+  nickname: string | null;
 }
 
-export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapperProps) {
+export function SidebarWrapper({ conversations, isAdmin, email, nickname }: SidebarWrapperProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [historyExpanded, setHistoryExpanded] = useState(true);
   const [showPersonalCenter, setShowPersonalCenter] = useState(false);
+  const [currentNickname, setCurrentNickname] = useState(nickname);
   const router = useRouter();
 
   const handleCreateConversation = async () => {
@@ -164,9 +166,9 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
               <User className="w-4 h-4 text-primary-foreground" />
             </div>
             <div className="flex-1 min-w-0 text-left">
-              <p className="text-sm font-medium truncate">{email}</p>
+              <p className="text-sm font-medium truncate">{currentNickname || email}</p>
               <p className="text-xs text-sidebar-foreground/60 truncate">
-                {isAdmin ? "管理员" : "点击查看详情"}
+                {isAdmin ? "管理员" : (currentNickname ? email : "点击设置昵称")}
               </p>
             </div>
           </button>
@@ -178,6 +180,7 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
       <PersonalCenter
         isOpen={showPersonalCenter}
         onClose={() => setShowPersonalCenter(false)}
+        onNicknameChange={(newNickname) => setCurrentNickname(newNickname)}
       />
 
       {/* 收起/展开按钮 - 始终可见 */}
