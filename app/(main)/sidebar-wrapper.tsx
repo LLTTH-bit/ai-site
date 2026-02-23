@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PlusCircle, Settings, User, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, UserCircle } from "lucide-react";
+import { PlusCircle, Settings, User, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import ConversationSidebar from "@/components/conversation-sidebar";
 import { LogoutButton } from "./logout-button";
 import PersonalCenter from "@/components/personal-center";
@@ -147,42 +147,29 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
           </div>
         )}
 
-        {/* 个人中心（仅普通用户可见） */}
-        {!isAdmin && (
-          <div
-            className={`p-2 border-t border-sidebar-border ${
-              collapsed ? "opacity-0 invisible" : "opacity-100 visible"
-            }`}
-            style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
-          >
-            <button
-              onClick={() => setShowPersonalCenter(true)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sm transition-colors w-full"
-            >
-              <UserCircle className="w-4 h-4" />
-              个人中心
-            </button>
-          </div>
-        )}
-
-        {/* 用户信息 */}
+        {/* 用户信息（点击可打开个人中心） */}
         <div
           className={`p-3 border-t border-sidebar-border ${
             collapsed ? "opacity-0 invisible" : "opacity-100 visible"
           }`}
           style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
         >
-          <div className="flex items-center gap-2 px-2 py-2">
+          <button
+            onClick={() => !isAdmin && setShowPersonalCenter(true)}
+            className={`flex items-center gap-2 px-2 py-2 w-full rounded-lg transition-colors ${
+              !isAdmin ? "hover:bg-sidebar-accent cursor-pointer" : ""
+            }`}
+          >
             <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
               <User className="w-4 h-4 text-primary-foreground" />
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 text-left">
               <p className="text-sm font-medium truncate">{email}</p>
               <p className="text-xs text-sidebar-foreground/60 truncate">
-                {isAdmin ? "管理员" : "用户"}
+                {isAdmin ? "管理员" : "点击查看详情"}
               </p>
             </div>
-          </div>
+          </button>
           <LogoutButton />
         </div>
       </aside>
