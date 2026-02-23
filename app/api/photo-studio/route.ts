@@ -45,16 +45,15 @@ export async function POST(request: NextRequest) {
 
     const prompt = gender === "male" ? malePrompt : femalePrompt;
 
-    // 调用硅基流动图像编辑API
-    const apiKey = process.env.AI_API_KEY;
-    const apiBase = process.env.AI_API_BASE_URL || "https://api.siliconflow.cn/v1";
+    // 调用豆包图像生成API
+    const apiKey = process.env.DOUBAO_API_KEY;
 
     if (!apiKey) {
       return NextResponse.json({ error: "API配置错误，请联系管理员" }, { status: 500 });
     }
 
     const response = await fetch(
-      `${apiBase}/images/generations`,
+      "https://ark.cn-beijing.volces.com/api/v3/images/generations",
       {
         method: "POST",
         headers: {
@@ -62,9 +61,10 @@ export async function POST(request: NextRequest) {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          "model": "Kwai-Kolors/Kolors",
+          "model": "doubao-seedream-5-0-260128",
           "prompt": prompt,
-          "image_size": "1024x1024"
+          "size": "2K",
+          "watermark": false
         }),
       }
     );
@@ -73,20 +73,19 @@ export async function POST(request: NextRequest) {
       const errorText = await response.text();
       console.error("Qwen API error:", errorText);
       console.error("API Key:", apiKey ? "present" : "missing");
-      console.error("API Base:", apiBase);
       return NextResponse.json({ error: `图像生成失败: ${errorText}` }, { status: 500 });
     }
 
     const result = await response.json();
 
     // 解析返回的图像
-    const images = result.images;
-    if (!images || !images[0] || !images[0].url) {
+    const data = result.data;
+    if (!data || !data[0] || !data[0].url) {
       console.error("API response:", result);
       return NextResponse.json({ error: "未获取到生成的图像" }, { status: 500 });
     }
 
-    const imageUrl = images[0].url;
+    const imageUrl = data[0].url;
 
     return NextResponse.json({ image: imageUrl });
   } catch (error) {
