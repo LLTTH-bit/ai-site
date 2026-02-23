@@ -1,18 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getIronSession } from "iron-session";
-import { cookies } from "next/headers";
+import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
   try {
     // 检查登录状态
-    const session = await getIronSession(cookies(), {
-      password: process.env.SESSION_SECRET || "dev-secret",
-      cookieName: "ai-site-session",
+    const session = await getSession();
+
+    if (!session.isLoggedIn) {
+      return NextResponse.json({ error: "请先登录" }, { status: 401 });
+    }
+
+    // 获取用户信息
+    const user = await prisma.user.findUnique({
+      where: { id: session.userId },
     });
 
-    if (!session.user) {
-      return NextResponse.json({ error: "请先登录" }, { status: 401 });
+    if (!user) {
+      return NextResponse.json({ error: "用户不存在" }, { status: 404 });
     }
 
     const formData = await request.formData();
