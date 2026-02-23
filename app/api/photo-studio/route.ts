@@ -73,7 +73,9 @@ export async function POST(request: NextRequest) {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Qwen API error:", errorText);
-      return NextResponse.json({ error: "图像生成失败，请重试" }, { status: 500 });
+      console.error("API Key:", apiKey ? "present" : "missing");
+      console.error("API Base:", apiBase);
+      return NextResponse.json({ error: `图像生成失败: ${errorText}` }, { status: 500 });
     }
 
     const result = await response.json();
