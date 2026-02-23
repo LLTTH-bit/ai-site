@@ -173,9 +173,25 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
     return isTyping && displayed.length > 0;
   };
 
+  // 只在消息数量变化时滚动到底部（用户发送消息或AI回复开始/结束）
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, displayedContent]);
+  }, [messages.length]);
+
+  // AI 流式输出时，只在用户已经在底部时才自动滚动
+  useEffect(() => {
+    if (!isTyping) return;
+
+    const container = messagesEndRef.current?.parentElement?.parentElement;
+    if (!container) return;
+
+    // 检查用户是否已经在底部（允许 50px 误差）
+    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+
+    if (isNearBottom) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+    }
+  }, [displayedContent, isTyping]);
 
   // AI 回复结束后自动聚焦输入框
   useEffect(() => {
