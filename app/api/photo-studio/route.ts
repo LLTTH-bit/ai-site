@@ -109,8 +109,8 @@ export async function POST(request: NextRequest) {
       const requestBody = {
         "model": "doubao-seedream-4-5-251128",
         "prompt": prompt,
-        "image_url": fullImageUrl,
-        "size": "2048x2048"
+        "image": [fullImageUrl],
+        "size": "2k"
       };
       console.log("API request body:", JSON.stringify(requestBody));
 
