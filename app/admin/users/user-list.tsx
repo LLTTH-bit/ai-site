@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { UserCheck, UserX, Mail, Calendar } from "lucide-react";
+import { UserCheck, UserX, Mail, Calendar, CreditCard } from "lucide-react";
 
 interface User {
   id: string;
@@ -15,6 +15,7 @@ interface User {
     conversations: number;
     usageLogs: number;
   };
+  totalCost: number;
 }
 
 export default function UserList({ users }: { users: User[] }) {
@@ -58,6 +59,9 @@ export default function UserList({ users }: { users: User[] }) {
               </th>
               <th className="px-5 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                 对话数
+              </th>
+              <th className="px-5 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                费用消耗
               </th>
               <th className="px-5 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                 注册时间
@@ -112,6 +116,14 @@ export default function UserList({ users }: { users: User[] }) {
                 </td>
                 <td className="px-5 py-4 text-sm text-slate-600">
                   {user._count.conversations}
+                </td>
+                <td className="px-5 py-4">
+                  <div className="flex items-center gap-1.5">
+                    <CreditCard className="w-3.5 h-3.5 text-slate-400" />
+                    <span className={`text-sm font-medium ${user.totalCost > 0 ? "text-orange-600" : "text-slate-600"}`}>
+                      ¥{user.totalCost.toFixed(4)}
+                    </span>
+                  </div>
                 </td>
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-1.5 text-sm text-slate-500">
