@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
-import UserList from "./user-list";
+import UserManager from "./user-manager";
 
 // 模型价格（每百万 tokens）
 const MODEL_PRICING: Record<string, number> = {
@@ -26,6 +26,7 @@ export default async function UsersPage() {
     redirect("/");
   }
 
+  // 查询所有用户
   const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },
     include: {
@@ -59,9 +60,9 @@ export default async function UsersPage() {
 
     return {
       ...user,
-      totalCost: Math.round(totalCost * 10000) / 10000, // 精确到小数点后4位
+      totalCost: Math.round(totalCost * 10000) / 10000,
     };
   });
 
-  return <UserList users={usersWithCost} />;
+  return <UserManager users={usersWithCost} adminEmail={session.email} />;
 }
