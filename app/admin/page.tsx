@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { Users, UserCheck, MessageSquare, TrendingUp, Key, Zap } from "lucide-react";
@@ -59,14 +60,20 @@ export default async function AdminDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((stat) => (
-          <div
+          <Link
             key={stat.label}
-            className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
+            href={stat.label === "今日 Token" ? "/admin/usage" : "#"}
+            className={`bg-white rounded-xl p-5 border shadow-sm hover:shadow-md transition-shadow ${
+              stat.label === "今日 Token" ? "cursor-pointer hover:border-blue-300" : ""
+            }`}
           >
             <div className="flex items-center justify-between">
               <div className={`p-2.5 rounded-lg ${stat.bgColor}`}>
                 <stat.icon className={`w-5 h-5 ${colorMap[stat.color]}`} />
               </div>
+              {stat.label === "今日 Token" && (
+                <span className="text-xs text-blue-500">点击查看详情</span>
+              )}
             </div>
             <div className="mt-3">
               <p className="text-sm text-slate-500">{stat.label}</p>
@@ -74,7 +81,7 @@ export default async function AdminDashboard() {
                 {typeof stat.value === "number" ? stat.value.toLocaleString() : stat.value}
               </p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
