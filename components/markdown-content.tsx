@@ -66,7 +66,7 @@ export function MarkdownContent({ content, isDark = true }: { content: string; i
   // 简单的 Markdown 渲染
   const renderMarkdown = (text: string) => {
     const lines = text.split("\n");
-    const elements: React.JSX.Element[] = [];
+    const elements: React.ReactNode[] = [];
     let inCodeBlock = false;
     let codeContent = "";
     let codeLanguage = "";
