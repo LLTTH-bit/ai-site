@@ -45,14 +45,16 @@ export async function POST(request: NextRequest) {
 
     const prompt = gender === "male" ? malePrompt : femalePrompt;
 
-    // 调用通义千问图像编辑API
-    const apiKey = process.env.DASHSCOPE_API_KEY;
-    if (!apiKey || apiKey.includes("xxxx")) {
+    // 调用硅基流动图像编辑API
+    const apiKey = process.env.AI_API_KEY;
+    const apiBase = process.env.AI_API_BASE_URL || "https://api.siliconflow.cn/v1";
+
+    if (!apiKey) {
       return NextResponse.json({ error: "API配置错误，请联系管理员" }, { status: 500 });
     }
 
     const response = await fetch(
-      "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      `${apiBase}/chat/completions`,
       {
         method: "POST",
         headers: {
