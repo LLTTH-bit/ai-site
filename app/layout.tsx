@@ -31,7 +31,7 @@ export default function RootLayout({
       <head>
         <link
           rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+          href="https://cdn.bootcdn.net/ajax/libs/KaTeX/0.16.9/katex.min.css"
         />
       </head>
       <body
