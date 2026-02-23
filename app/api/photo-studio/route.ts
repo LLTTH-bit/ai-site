@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          "model": "Doubao-Seedream-4.5",
+          "model": "doubao-seedream-4-5-251128",
           "prompt": prompt,
           "size": "2K",
           "watermark": false
