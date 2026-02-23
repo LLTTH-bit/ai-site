@@ -666,7 +666,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
                 {showModelList && (
                   <div
                     onMouseLeave={() => setShowModelList(false)}
-                    className={`absolute top-full mt-2 left-0 w-56 rounded-lg shadow-lg border overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-200 origin-top-left ${
+                    className={`absolute bottom-full mb-2 left-0 w-56 rounded-lg shadow-lg border overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-200 origin-bottom-left ${
                       isDark ? "bg-[#2f2f2f] border-gray-700" : "bg-white border-gray-200"
                     }`}>
                     {availableModels.map((model) => (
