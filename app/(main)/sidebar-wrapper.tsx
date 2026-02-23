@@ -116,11 +116,13 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
 
               {/* 对话历史列表 - 可收起 */}
               <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  historyExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                className={`grid transition-all duration-300 ease-in-out ${
+                  historyExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                 }`}
               >
-                <ConversationSidebar initialConversations={conversations} />
+                <div className="overflow-hidden">
+                  <ConversationSidebar initialConversations={conversations} />
+                </div>
               </div>
             </div>
           </div>
