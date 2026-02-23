@@ -63,7 +63,7 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
       >
         {/* 顶部：Logo 和 LLTTH */}
         <div
-          className={`p-4 flex items-center gap-3 ${
+          className={`p-4 flex items-center gap-3 border-b border-sidebar-border ${
             collapsed ? "opacity-0 invisible" : "opacity-100 visible"
           }`}
           style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
@@ -88,8 +88,18 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
           style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
         >
           <div className="p-3 pt-0">
+            {/* 新建对话按钮 */}
+            <button
+              onClick={handleCreateConversation}
+              disabled={isCreating}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-sidebar-accent transition-colors w-full disabled:opacity-50 mb-2"
+            >
+              <PlusCircle className="w-5 h-5" />
+              <span className="font-medium">{isCreating ? "创建中..." : "新建对话"}</span>
+            </button>
+
             {/* 你的聊天 - 可收起 */}
-            <div className="mb-2">
+            <div>
               <button
                 onClick={() => setHistoryExpanded(!historyExpanded)}
                 className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-sidebar-accent transition-colors"
@@ -102,16 +112,6 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
                 ) : (
                   <ChevronDown className="w-4 h-4 text-sidebar-foreground/60" />
                 )}
-              </button>
-
-              {/* 新建对话按钮 - 放在"你的聊天"里面 */}
-              <button
-                onClick={handleCreateConversation}
-                disabled={isCreating}
-                className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-sidebar-accent transition-colors w-full disabled:opacity-50 mb-2"
-              >
-                <PlusCircle className="w-5 h-5" />
-                <span className="font-medium">{isCreating ? "创建中..." : "新建对话"}</span>
               </button>
 
               {/* 对话历史列表 - 可收起 */}
