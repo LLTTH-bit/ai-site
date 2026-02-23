@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PlusCircle, Settings, User, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
+import { PlusCircle, Settings, User, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, UserCircle } from "lucide-react";
 import ConversationSidebar from "@/components/conversation-sidebar";
 import { LogoutButton } from "./logout-button";
+import PersonalCenter from "@/components/personal-center";
 
 interface Conversation {
   id: string;
@@ -25,6 +26,7 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
   const [collapsed, setCollapsed] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [historyExpanded, setHistoryExpanded] = useState(true);
+  const [showPersonalCenter, setShowPersonalCenter] = useState(false);
   const router = useRouter();
 
   const handleCreateConversation = async () => {
@@ -145,6 +147,24 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
           </div>
         )}
 
+        {/* 个人中心（仅普通用户可见） */}
+        {!isAdmin && (
+          <div
+            className={`p-2 border-t border-sidebar-border ${
+              collapsed ? "opacity-0 invisible" : "opacity-100 visible"
+            }`}
+            style={{ transition: "opacity 0.2s ease-in-out, visibility 0.2s ease-in-out" }}
+          >
+            <button
+              onClick={() => setShowPersonalCenter(true)}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sm transition-colors w-full"
+            >
+              <UserCircle className="w-4 h-4" />
+              个人中心
+            </button>
+          </div>
+        )}
+
         {/* 用户信息 */}
         <div
           className={`p-3 border-t border-sidebar-border ${
@@ -166,6 +186,12 @@ export function SidebarWrapper({ conversations, isAdmin, email }: SidebarWrapper
           <LogoutButton />
         </div>
       </aside>
+
+      {/* 个人中心浮窗 */}
+      <PersonalCenter
+        isOpen={showPersonalCenter}
+        onClose={() => setShowPersonalCenter(false)}
+      />
 
       {/* 收起/展开按钮 - 始终可见 */}
       <button
