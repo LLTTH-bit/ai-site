@@ -181,7 +181,7 @@ export async function POST(req: NextRequest) {
 
           prisma.conversation.update({
             where: { id: conversationId },
-            data: { updatedAt: new Date() },
+            data: { updatedAt: new Date(), model: model },
           }).catch(console.error);
 
           if (!conversation.title || conversation.title === "新对话") {
