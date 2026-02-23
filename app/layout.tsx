@@ -21,10 +21,6 @@ export const metadata: Metadata = {
   },
 };
 
-// KaTeX CSS
-const katexCss = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css";
-const katexIntegrity = "sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -35,9 +31,7 @@ export default function RootLayout({
       <head>
         <link
           rel="stylesheet"
-          href={katexCss}
-          integrity={katexIntegrity}
-          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
         />
       </head>
       <body
