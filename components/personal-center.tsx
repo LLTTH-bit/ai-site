@@ -134,7 +134,6 @@ export default function PersonalCenter({ isOpen, onClose, onNicknameChange }: Pe
                           onChange={(e) => setNickname(e.target.value)}
                           placeholder="输入昵称"
                           className="flex-1 px-2 py-1 text-sm border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          autoFocus
                         />
                         <button
                           onClick={saveNickname}
