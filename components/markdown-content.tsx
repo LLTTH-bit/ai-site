@@ -7,9 +7,10 @@ interface CodeBlockProps {
   children?: React.ReactNode;
   className?: string;
   inline?: boolean;
+  isDark?: boolean;
 }
 
-function CodeBlock({ children, className, inline }: CodeBlockProps) {
+function CodeBlock({ children, className, inline, isDark = true }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
 
   // 提取代码内容
@@ -78,7 +79,7 @@ export function MarkdownContent({ content, isDark = true }: { content: string; i
         } else {
           inCodeBlock = false;
           elements.push(
-            <CodeBlock key={index} className={codeLanguage ? `language-${codeLanguage}` : ""}>
+            <CodeBlock key={index} className={codeLanguage ? `language-${codeLanguage}` : ""} isDark={isDark}>
               {codeContent}
             </CodeBlock>
           );
