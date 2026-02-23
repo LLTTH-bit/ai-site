@@ -599,8 +599,56 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
                 : "0 4px 20px rgba(0, 0, 0, 0.1)"
             }}
           >
-            {/* 顶部工具栏：模型选择和深度思考 */}
-            <div className="flex items-center justify-between px-3 py-2 border-b border-transparent">
+            {/* 文本输入框 */}
+            <div className="relative">
+              <textarea
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={isCurrentlyTyping() ? "AI 正在回复中..." : "发送消息..."}
+                className={`w-full px-4 py-3 bg-transparent resize-none focus:outline-none transition-colors ${
+                  isDark
+                    ? "text-white placeholder-gray-500"
+                    : "text-gray-900 placeholder-gray-400"
+                }`}
+                rows={2}
+                disabled={loading || isCurrentlyTyping()}
+                style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 400 }}
+              />
+
+              {/* 发送按钮 */}
+              {isCurrentlyTyping() ? (
+                <button
+                  onClick={() => { isPausedRef.current = true; }}
+                  className="absolute right-3 bottom-3 p-2 rounded-lg bg-red-500 text-white hover:opacity-90 transition-all cursor-pointer"
+                  title="停止回复"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 6h12v12H6z"/>
+                  </svg>
+                </button>
+              ) : (
+                <button
+                  onClick={sendMessage}
+                  disabled={loading || isCurrentlyTyping() || !input.trim()}
+                  className={`absolute right-3 bottom-3 p-2 rounded-lg transition-all ${
+                    input.trim() && !loading && !isCurrentlyTyping()
+                      ? "bg-blue-500 text-white hover:opacity-90 cursor-pointer"
+                      : isDark
+                        ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                        : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  }`}
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                  </svg>
+                </button>
+              )}
+            </div>
+
+            {/* 底部工具栏：模型选择和深度思考 */}
+            <div className="flex items-center justify-between px-3 py-2 border-t border-transparent">
               {/* 左侧：模型选择 */}
               <div className="relative">
                 <button
@@ -618,7 +666,7 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
                 {showModelList && (
                   <div
                     onMouseLeave={() => setShowModelList(false)}
-                    className={`absolute bottom-full mb-2 left-0 w-56 rounded-lg shadow-lg border overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-200 origin-bottom-left ${
+                    className={`absolute top-full mt-2 left-0 w-56 rounded-lg shadow-lg border overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-200 origin-top-left ${
                       isDark ? "bg-[#2f2f2f] border-gray-700" : "bg-white border-gray-200"
                     }`}>
                     {availableModels.map((model) => (
@@ -671,54 +719,6 @@ export default function ChatInterface({ conversation }: { conversation: Conversa
                     <path d="M2 12l10 5 10-5" />
                   </svg>
                   <span>思考</span>
-                </button>
-              )}
-            </div>
-
-            {/* 文本输入框 */}
-            <div className="relative">
-              <textarea
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={isCurrentlyTyping() ? "AI 正在回复中..." : "发送消息..."}
-                className={`w-full px-4 py-3 bg-transparent resize-none focus:outline-none transition-colors ${
-                  isDark
-                    ? "text-white placeholder-gray-500"
-                    : "text-gray-900 placeholder-gray-400"
-                }`}
-                rows={2}
-                disabled={loading || isCurrentlyTyping()}
-                style={{ fontFamily: 'Söhne, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: 400 }}
-              />
-
-              {/* 发送按钮 */}
-              {isCurrentlyTyping() ? (
-                <button
-                  onClick={() => { isPausedRef.current = true; }}
-                  className="absolute right-3 bottom-3 p-2 rounded-lg bg-red-500 text-white hover:opacity-90 transition-all cursor-pointer"
-                  title="停止回复"
-                >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M6 6h12v12H6z"/>
-                  </svg>
-                </button>
-              ) : (
-                <button
-                  onClick={sendMessage}
-                  disabled={loading || isCurrentlyTyping() || !input.trim()}
-                  className={`absolute right-3 bottom-3 p-2 rounded-lg transition-all ${
-                    input.trim() && !loading && !isCurrentlyTyping()
-                      ? "bg-blue-500 text-white hover:opacity-90 cursor-pointer"
-                      : isDark
-                        ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                        : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  }`}
-                >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                  </svg>
                 </button>
               )}
             </div>
