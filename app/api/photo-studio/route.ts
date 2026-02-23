@@ -106,6 +106,14 @@ export async function POST(request: NextRequest) {
       attempts++;
       console.log(`API attempt ${attempts}/${maxAttempts}`);
 
+      const requestBody = {
+        "model": "doubao-seedream-4-5-251128",
+        "prompt": prompt,
+        "image_url": fullImageUrl,
+        "size": "2048x2048"
+      };
+      console.log("API request body:", JSON.stringify(requestBody));
+
       response = await fetch(
         "https://ark.cn-beijing.volces.com/api/v3/images/generations",
         {
@@ -114,12 +122,7 @@ export async function POST(request: NextRequest) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${apiKey}`,
           },
-          body: JSON.stringify({
-            "model": "doubao-seedream-4-5-251128",
-            "prompt": prompt,
-            "image_url": fullImageUrl,
-            "size": "2048x2048"
-          }),
+          body: JSON.stringify(requestBody),
         }
       );
 
