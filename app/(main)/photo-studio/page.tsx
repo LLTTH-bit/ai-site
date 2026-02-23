@@ -60,12 +60,18 @@ export default function PhotoStudioPage() {
         body: formData,
       });
 
+      const text = await res.text();
+
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "生成失败");
+        let errorMsg = "生成失败";
+        try {
+          const data = JSON.parse(text);
+          errorMsg = data.error || text;
+        } catch {}
+        throw new Error(errorMsg);
       }
 
-      const data = await res.json();
+      const data = JSON.parse(text);
       setResultImage(data.image);
     } catch (err) {
       setError(err instanceof Error ? err.message : "生成失败，请重试");
