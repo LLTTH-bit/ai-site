@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     }
 
     const response = await fetch(
-      "https://ark.cn-beijing.volces.com/api/v3/images/edits",
+      "https://ark.cn-beijing.volces.com/api/v3/images/generations",
       {
         method: "POST",
         headers: {
@@ -63,9 +63,8 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           "model": "doubao-seedream-4-5-251128",
           "prompt": prompt,
-          "image_url": dataUrl,
-          "size": "2K",
-          "watermark": false
+          "image": dataUrl,
+          "size": "2048x2048"
         }),
       }
     );
