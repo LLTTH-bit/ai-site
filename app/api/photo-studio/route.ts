@@ -36,7 +36,8 @@ export async function POST(request: NextRequest) {
     const uploadFormData = new FormData();
     uploadFormData.append("image", image);
 
-    const uploadResponse = await fetch(new URL("/api/upload", request.url), {
+    const origin = request.headers.get("origin") || `http://localhost:3000`;
+    const uploadResponse = await fetch(`${origin}/api/upload`, {
       method: "POST",
       body: uploadFormData,
     });
@@ -47,7 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { url: uploadedUrl } = await uploadResponse.json();
-    const fullImageUrl = `${request.headers.get("origin")}${uploadedUrl}`;
+    const fullImageUrl = `${origin}${uploadedUrl}`;
 
     console.log("Uploaded image URL:", fullImageUrl);
 
